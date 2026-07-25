@@ -3344,7 +3344,7 @@ function renderizarProdutosDoCache() {
           ${priceUnit ? '<option value="unit">Unidade</option>' : ''}
           ${priceKg ? '<option value="kg">Kg</option>' : ''}
         </select>
-        <input id="qty_${p._id}" type="number" value="1" min="0.1" step="0.1">
+        <input id="qty_${p._id}" type="number" value="1" min="1" step="1">
         ${
           cartEnabled
         ? `<button class="btn btn-add" id="add_${p._id}" style="display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; position: relative;">
