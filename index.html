@@ -1943,6 +1943,101 @@ table {
 
 /*---------------------------------------------*/
 
+
+/* ============================================
+       JANELA FLUTUANTE DE VISUALIZAÇÃO - BEBIDAS
+       ============================================ */
+
+    .product-view-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.75);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 999999 !important;
+        cursor: pointer;
+        animation: fadeIn 0.25s ease;
+        backdrop-filter: blur(4px);
+    }
+
+    .product-view-modal.active {
+        display: flex;
+    }
+
+    .product-view-modal .modal-content {
+        width: 520px;
+        max-width: 92vw;
+        max-height: 90vh;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        animation: slideUp 0.3s ease;
+        overflow: hidden;
+        cursor: default;
+        position: relative;
+        z-index: 999999 !important;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .product-view-modal .modal-content {
+            width: 95vw;
+            border-radius: 10px;
+        }
+    }
+
+    .product-img {
+        transition: transform 0.4s ease, filter 0.3s ease;
+        cursor: pointer;
+    }
+
+    .product-img:hover {
+        transform: scale(1.05);
+        filter: brightness(0.95);
+    }
+
+    
+    .btn-remove:hover {
+        transform: scale(1.05) !important;
+    }
+
+    /*-----------------------------------------------------------------------------------------------------*/
+    /* Efeito hover do botão Adicione - FICA VERDE */
+.btn-add:hover {
+    background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+    color: #ffffff !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5) !important;
+}
+
+/* Badge dentro do botão no hover */
+.btn-add:hover span[style*="background:#2c3e50"] {
+    background: #ffffff !important;
+    color: #27ae60 !important;
+}
+
+    /*------------------------------------------------------------------------------------------------------*/
+
 </style> <!--final style-->
 
 
@@ -1959,7 +2054,7 @@ table {
     
     <!-- Telefone com posicionamento absoluto -->
     <h6 style="margin: 0; padding: 0; font-size: 11px; font-weight: bold; color: #000000; text-align: center; position: absolute; top: 92px; left: 50%; transform: translateX(-50%);">
-      📞 (81) 986176915
+      <!--📞 (81) 986176915 -->
     </h6>
   </div>
 
@@ -1998,7 +2093,7 @@ table {
   <!--------------------------------------------------------------------------------------------------->
   <!-- REDES SOCIAIS 
 <div style="display: flex; gap: 15px; margin-top: 8px;">
-  <!-- Instagram 
+   Instagram 
   <a href="https://www.instagram.com/ta_na_mao_delivery/" 
      target="_blank"
      style="
@@ -16647,6 +16742,362 @@ console.log('🔧 Botões funcionais');
 console.log('❌ Botão Cancelar adicionado');
 console.log('🔄 Botão Alterar Pedido adicionado');
 console.log('👉 Execute: abrirListaPedidos()');
+//----------------------------------------------------------------------------------------------------
+
+// ============================================================
+    // 🍺 JANELA FLUTUANTE DE VISUALIZAÇÃO - DELIVERY BEBIDAS
+    // ============================================================
+
+    // =========================
+    // FUNÇÕES AUXILIARES
+    // =========================
+
+    function formatBRL(value) {
+        if (value == null || isNaN(value) || value === 0) return 'R$ 0,00';
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(value);
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // =========================
+    // FUNÇÃO PARA VISUALIZAR PRODUTO (JANELA FLUTUANTE)
+    // =========================
+
+    function visualizarProduto(id, name, img, price) {
+    // Remove modal existente
+    const modalExistente = document.querySelector('.product-view-modal');
+    if (modalExistente) {
+        modalExistente.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'product-view-modal active';
+    
+    const nomeProduto = name || 'Produto';
+    
+    // FORMATAR O PREÇO
+    let precoExibido = '';
+    
+    if (price !== undefined && price !== null && price !== '' && !isNaN(price) && Number(price) > 0) {
+        precoExibido = formatBRL(Number(price));
+    } else {
+        precoExibido = 'Sob consulta';
+    }
+    
+    const imagemFixa = 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600&h=400&fit=crop';
+    
+    let imagemUrl = img;
+    if (!imagemUrl || imagemUrl === '' || imagemUrl === 'undefined' || imagemUrl === 'null' || imagemUrl === 'https://via.placeholder.com/400x300?text=Sem+imagem') {
+        imagemUrl = imagemFixa;
+    }
+    
+    modal.innerHTML = `
+        <div class="modal-content" onclick="event.stopPropagation();" style="width:520px;max-width:92vw;max-height:90vh;background:#ffffff;border-radius:14px;padding:0;box-shadow:0 20px 60px rgba(0,0,0,0.4);overflow:hidden;cursor:default;position:relative;z-index:999999;">
+            
+            <!-- CABEÇALHO -->
+            <div style="background:linear-gradient(135deg, #27ae60, #2ecc71);padding:10px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.1);">
+                
+                <!-- CARRINHO AMARELO NEGRITO + NOME VERDE NEGRITO -->
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(241,196,15,0.15);border-radius:50%;border:2px solid #f1c40f;flex-shrink:0;font-size:28px;font-weight:900;color:#f1c40f;text-shadow:0 0 25px rgba(241,196,15,0.5);box-shadow:0 0 20px rgba(241,196,15,0.15);">
+                        🛒
+                    </div>
+                    <span style="font-size:16px;font-weight:900;color:#ffffff;text-shadow:0 0 15px rgba(255,255,255,0.2);letter-spacing:0.5px;">${escapeHtml(nomeProduto)}</span>
+                </div>
+                
+                <!-- PREÇO AMARELO + FECHAR -->
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <span style="font-size:18px;font-weight:900;color:#2c3e50;background:linear-gradient(135deg, #f1c40f, #f39c12);padding:6px 16px;border-radius:20px;border:2px solid rgba(241,196,15,0.5);box-shadow:0 4px 15px rgba(241,196,15,0.4);">
+                        ${precoExibido}
+                    </span>
+                    <button onclick="fecharVisualizacaoProduto()" title="Fechar" style="width:34px;height:34px;border-radius:50%;border:none;background:#e74c3c;color:white;font-size:18px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 2px 8px rgba(231,76,60,0.4);">✕</button>
+                </div>
+            </div>
+            
+            <!-- CORPO - IMAGEM -->
+            <div style="display:flex;align-items:center;justify-content:center;min-height:350px;background:#f8f9fa;padding:10px;">
+                <img src="${imagemUrl}" 
+                     alt="${escapeHtml(nomeProduto)}"
+                     style="max-width:100%;max-height:75vh;object-fit:contain;border-radius:4px;"
+                     onerror="this.src='${imagemFixa}'">
+            </div>
+            
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            fecharVisualizacaoProduto();
+        }
+    });
+    
+    const handleEsc = (e) => {
+        if (e.key === 'Escape') {
+            fecharVisualizacaoProduto();
+            document.removeEventListener('keydown', handleEsc);
+        }
+    };
+    document.addEventListener('keydown', handleEsc);
+    
+    document.body.style.overflow = 'hidden';
+}
+    // =========================
+    // FUNÇÃO PARA FECHAR A JANELA
+    // =========================
+
+    function fecharVisualizacaoProduto() {
+        const modal = document.querySelector('.product-view-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.remove();
+                document.body.style.overflow = '';
+            }, 200);
+        }
+    }
+
+    // =========================
+    // FUNÇÃO RENDERIZAR PRODUTOS DO CACHE (COM JANELA FLUTUANTE)
+    // =========================
+
+    let renderizando = false;
+
+    function renderizarProdutosDoCache() {
+        if (renderizando) return;
+        renderizando = true;
+        
+        try {
+            if (!produtosCache || produtosCache.length === 0) {
+                const container = document.getElementById('productsList');
+                if (container) {
+                    container.innerHTML = '<div class="small">Nenhum produto disponível no momento.</div>';
+                }
+                renderizando = false;
+                return;
+            }
+            
+            const container = document.getElementById('productsList');
+            if (!container) {
+                renderizando = false;
+                return;
+            }
+            
+            const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+            container.innerHTML = '';
+            let produtosFiltrados = 0;
+            
+            produtosCache.forEach(p => {
+                const nomeProduto = p.name || p.nome || 'Produto';
+                if (!nomeProduto.toLowerCase().includes(searchTerm)) return;
+                produtosFiltrados++;
+                
+                const priceUnit = p.priceUnit != null ? Number(p.priceUnit) : null;
+                const priceKg = p.priceKg != null ? Number(p.priceKg) : null;
+                const preco = p.preco != null ? Number(p.preco) : null;
+                const price = p.price != null ? Number(p.price) : null;
+                const precoTexto = priceUnit ?? priceKg ?? preco ?? price ?? 0;
+                
+                let cartQty = 0;
+                const found = window.cart?.find(item => item.id === p._id || item.id === p.id);
+                if (found) cartQty = found.qty;
+                
+                const card = document.createElement('div');
+                card.className = 'product';
+                card.setAttribute('data-id', p._id || p.id);
+                
+                const imagemProduto = p.img || p.imagem || 'https://via.placeholder.com/400x300?text=Sem+imagem';
+                
+                card.innerHTML = `
+                    <div class="image-container" style="position:relative;overflow:hidden;border-radius:10px;background:#ffffff;height:120px;">
+                        <img src="${escapeHtml(imagemProduto)}" 
+                             class="product-img"
+                             loading="lazy"
+                             data-id="${p._id || p.id}"
+                             style="cursor:pointer;width:100%;height:110px;object-fit:cover;border-radius:10px 10px 0 0;transition:transform 0.3s ease;"
+                             title="Clique para ampliar">
+                    </div>
+                    
+                    <div class="info-area" style="padding:10px 10px 5px 10px;">
+                        <div class="name" style="font-weight:600;font-size:14px;margin-bottom:4px;">${escapeHtml(nomeProduto)}</div>
+                        <div class="price-box">
+                            <div class="current-price">
+                                <strong style="font-size:16px;color:#27ae60;">${formatBRL(precoTexto)}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="controls" style="padding:0 10px 10px 10px;background:#ffffff;">
+                        <!-- 1º LINHA: SELETOR KG/UNIDADE -->
+                        <select id="mode_${p._id || p.id}" style="width:100%;padding:8px;border-radius:6px;border:1px solid #ddd;margin-bottom:8px;font-size:13px;background:white;box-sizing:border-box;height:38px;">
+                            ${p.priceUnit != null && p.priceUnit > 0 ? '<option value="unit">Unidade</option>' : ''}
+                            ${p.priceKg != null && p.priceKg > 0 ? '<option value="kg">Kg</option>' : ''}
+                            ${(!p.priceUnit || p.priceUnit <= 0) && (!p.priceKg || p.priceKg <= 0) ? '<option value="">Sem opção</option>' : ''}
+                        </select>
+                        
+                        <!-- 2º LINHA: QUANTIDADE (ALINHADA À ESQUERDA) -->
+                        <input id="qty_${p._id || p.id}" type="number" value="1" min="1" step="1" style="width:100%;padding:8px;border-radius:6px;border:1px solid #ddd;text-align:left;box-sizing:border-box;height:38px;margin-bottom:8px;padding-left:12px;">
+                        
+                        <!-- 3º LINHA: BOTÃO ADICIONE -->
+                        <button class="btn btn-add" id="add_${p._id || p.id}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 12px;background:linear-gradient(135deg, #fde047, #facc15);color:#2c3e50;border:none;border-radius:6px;font-weight:bold;cursor:pointer;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(250,204,21,0.3);box-sizing:border-box;height:38px;">
+                        <span style="font-size:16px;">🛒</span>
+                        ${cartQty > 0 
+                            ? `<span style="background:#2c3e50;color:#fde047;font-size:11px;font-weight:bold;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;">
+                                ${cartQty}
+                              </span>`
+                            : `<span style="font-size:13px;">Adicione</span>`
+                        }
+                    </button>
+                        
+                        <!-- BOTÃO REMOVER (se houver itens) -->
+                        ${cartQty > 0 ? `<button class="btn btn-remove" id="rem_${p._id || p.id}" style="width:100%;margin-top:8px;padding:8px 12px;background:#e74c3c;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;box-sizing:border-box;height:38px;">🗑️ Remover do carrinho</button>` : ""}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+                
+                // EVENTO DE CLIQUE NA IMAGEM (JANELA FLUTUANTE)
+                const imgElement = card.querySelector('.product-img');
+                if (imgElement) {
+                    imgElement.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const productId = card.getAttribute('data-id');
+                        const productData = produtosCache.find(prod => (prod._id || prod.id) === productId);
+                        if (productData) {
+                            const preco = productData.priceUnit ?? productData.priceKg ?? productData.preco ?? productData.price ?? 0;
+                            visualizarProduto(
+                                productData._id || productData.id,
+                                productData.name || productData.nome,
+                                productData.img || productData.imagem,
+                                preco
+                            );
+                        }
+                    });
+                }
+                
+                // EVENTO DO BOTÃO ADICIONAR
+                const addBtn = document.getElementById(`add_${p._id || p.id}`);
+                const qtyInput = document.getElementById(`qty_${p._id || p.id}`);
+                const remBtn = document.getElementById(`rem_${p._id || p.id}`);
+                
+                if (addBtn) {
+                    addBtn.addEventListener('click', async function() {
+                        const qty = Number(qtyInput?.value || 1) || 1;
+                        const unitPrice = precoTexto;
+                        
+                        if (unitPrice <= 0) {
+                            alert('Este produto não tem preço definido.');
+                            return;
+                        }
+                        
+                        const itemExistente = window.cart?.find(item => item.id === (p._id || p.id));
+                        
+                        if (itemExistente) {
+                            itemExistente.qty += qty;
+                        } else {
+                            if (!window.cart) window.cart = [];
+                            window.cart.push({
+                                id: p._id || p.id,
+                                name: p.name || p.nome || 'Produto',
+                                img: p.img || p.imagem,
+                                qty: qty,
+                                unitPrice: unitPrice
+                            });
+                        }
+                        
+                        if (typeof window.saveCart === 'function') {
+                            window.saveCart();
+                        } else {
+                            localStorage.setItem(window.CHAVE_CART || 'bebida1_cart', JSON.stringify(window.cart));
+                        }
+                        
+                        if (typeof window.updateCartCount === 'function') {
+                            window.updateCartCount();
+                        }
+                        
+                        renderizarProdutosDoCache();
+                        
+                        if (typeof renderCart === 'function') {
+                            renderCart();
+                        }
+                    });
+                }
+                
+                // EVENTO DO BOTÃO REMOVER (COM PERGUNTA)
+                if (remBtn) {
+                    remBtn.addEventListener('click', function() {
+                        const item = window.cart?.find(item => item.id === (p._id || p.id));
+                        if (!item) {
+                            alert('Item não encontrado no carrinho.');
+                            return;
+                        }
+                        
+                        const qtdRemover = prompt(`Você tem ${item.qty} no carrinho.\nQuantos deseja remover?`);
+                        if (qtdRemover === null) return;
+                        
+                        const n = Number(qtdRemover);
+                        if (isNaN(n) || n <= 0) {
+                            alert("Quantidade inválida. Digite um número maior que zero.");
+                            return;
+                        }
+                        
+                        if (n >= item.qty) {
+                            window.cart = window.cart.filter(i => i.id !== (p._id || p.id));
+                        } else {
+                            item.qty -= n;
+                        }
+                        
+                        if (typeof window.saveCart === 'function') {
+                            window.saveCart();
+                        } else {
+                            localStorage.setItem(window.CHAVE_CART || 'bebida1_cart', JSON.stringify(window.cart));
+                        }
+                        
+                        if (typeof window.updateCartCount === 'function') {
+                            window.updateCartCount();
+                        }
+                        
+                        renderizarProdutosDoCache();
+                        
+                        if (typeof renderCart === 'function') {
+                            renderCart();
+                        }
+                    });
+                }
+            });
+            
+            if (produtosFiltrados === 0 && searchTerm) {
+                container.innerHTML = `<div style="text-align:center;padding:20px;color:#666;">Nenhum produto encontrado para "${searchTerm}"</div>`;
+            }
+            
+        } catch (error) {
+            console.error('❌ Erro ao renderizar produtos:', error);
+        } finally {
+            renderizando = false;
+        }
+    }
+
+    // =========================
+    // FUNÇÃO PARA FORÇAR RECARGA COMPLETA
+    // =========================
+
+    window.recarregarProdutosCompleto = async function() {
+        console.log('🔄 Forçando recarga completa de produtos...');
+        produtosCache = null;
+        ultimoCarregamentoCache = null;
+        await carregarProdutosOtimizado();
+    };
+
+
 //----------------------------------------------------------------------------------------------------
 </script>
 </body>
