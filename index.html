@@ -2188,6 +2188,56 @@ table {
 
 /*--------------------------------------------------------------------*/
 
+/* ========== BOTÃO VOLTAR AO TOPO ========== */
+#btnVoltarTopo {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #f38a01, #00d170);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+}
+
+#btnVoltarTopo:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+}
+
+#btnVoltarTopo:active {
+    transform: scale(0.9);
+}
+
+/* Animação de pulsar */
+#btnVoltarTopo.pulsar {
+    animation: pulsar 1.5s ease-in-out infinite;
+}
+
+@keyframes pulsar {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+/* Responsivo para celular */
+@media (max-width: 600px) {
+    #btnVoltarTopo {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
 </style> <!--final style-->
 
 
@@ -2200,7 +2250,7 @@ table {
     
     <img src="imagens/logo_dito_drinks.png" 
          alt="Logo" 
-         style="width: 140px; height: 90px; border-radius: 8px;">
+         style="width: 135px; height: 90px; border-radius: 8px;">
     
     <!-- Telefone com posicionamento absoluto -->
     <h6 style="margin: 0; padding: 0; font-size: 11px; font-weight: bold; color: #000000; text-align: center; position: absolute; top: 92px; left: 50%; transform: translateX(-50%);">
@@ -17241,7 +17291,64 @@ window.removerPedidoEspecifico = async function(pedidoId) {
     }
 };
 /*------------------------------------------------------------------------------------*/
+// ============================================
+// BOTÃO VOLTAR AO TOPO
+// ============================================
+
+// Mostrar/esconder botão ao rolar
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('btnVoltarTopo');
+    if (window.scrollY > 300) {
+        btn.style.display = 'block';
+        // Adicionar animação de pulsar depois de 1 segundo
+        setTimeout(() => {
+            btn.classList.add('pulsar');
+        }, 1000);
+    } else {
+        btn.style.display = 'none';
+        btn.classList.remove('pulsar');
+    }
+});
+
+// Função para voltar ao topo
+function voltarAoTopo() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Rolagem suave
+    });
+}
+
+/*------------------------------------------------------------------------------------*/
 
 </script>
+
+<!-------------------------------------------------------------------------------------->
+<!-- BOTÃO VOLTAR AO TOPO - VERSÃO DEFINITIVA -->
+<button id="btnVoltarTopo" onclick="voltarAoTopo()" style="
+    position: fixed !important;
+    bottom: 100px !important;  /* AUMENTEI PARA FICAR ACIMA DO RODAPÉ */
+    right: 20px !important;
+    background: linear-gradient(135deg, #f38a01, #00d170) !important;
+    color: white !important;
+    border: 3px solid white !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 28px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+    display: none !important;
+    z-index: 9999999 !important;  /* Z-INDEX MÁXIMO */
+    transition: all 0.3s ease !important;
+    padding: 0 !important;
+    line-height: 60px !important;
+    text-align: center !important;
+    touch-action: manipulation !important;
+    opacity: 0.9 !important;
+    -webkit-tap-highlight-color: transparent !important;
+">
+    ↑
+</button>
+<!---------------------------------------------------------------------------------------->
 </body>
 </html>
