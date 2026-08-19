@@ -1153,7 +1153,7 @@ header {
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  background: linear-gradient(90deg, #fdfd00, #fdfd01, #fafa01) !important;
+  background: linear-gradient(90deg, #fcf803, #0cc6d3,#f0b105, #f7e603) !important;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
 }
 
@@ -2235,6 +2235,523 @@ table {
         bottom: 20px;
         right: 20px;
     }
+}
+
+/*---------------------------------------------------------------*/
+/* ============================================
+   🔞 TELA DE VERIFICAÇÃO DE IDADE - Z-INDEX MÁXIMO
+   ============================================ */
+
+/* Animações */
+@keyframes idadePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   OVERLAY - Fundo amarelo ouro
+   ============================================ */
+.idade-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    background: #d4a017 !important;
+    background: linear-gradient(145deg, #f9d976, #f39c12, #d4a017, #b7950b) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 2147483647 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+.idade-modal {
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    padding: 45px 40px 40px !important;
+    max-width: 460px !important;
+    width: 100% !important;
+    text-align: center !important;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.2), 0 0 0 3px #ffd700, 0 0 40px rgba(255,215,0,0.2) !important;
+    position: relative !important;
+    z-index: 2147483647 !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+}
+
+/* Borda superior dourada */
+.idade-modal::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -3px !important;
+    left: 10% !important;
+    width: 80% !important;
+    height: 5px !important;
+    background: linear-gradient(90deg, transparent, #ffd700, #f1c40f, #ffd700, transparent) !important;
+    border-radius: 50% !important;
+}
+
+/* ============================================
+   BADGE
+   ============================================ */
+.idade-badge {
+    display: inline-block !important;
+    background: #fef9e7 !important;
+    color: #b7950b !important;
+    padding: 5px 18px !important;
+    border-radius: 20px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    border: 1.5px solid #ffd700 !important;
+    margin-bottom: 14px !important;
+}
+
+/* ============================================
+   ÍCONE
+   ============================================ */
+.idade-icon-wrapper {
+    position: relative !important;
+    display: inline-block !important;
+    margin-bottom: 14px !important;
+}
+
+.idade-icon-bg {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 100px !important;
+    height: 100px !important;
+    background: radial-gradient(circle, rgba(255,215,0,0.12), transparent 70%) !important;
+    border-radius: 50% !important;
+    z-index: 0 !important;
+}
+
+.idade-icon {
+    font-size: 56px !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 1 !important;
+    animation: idadePulse 2.5s ease-in-out infinite !important;
+}
+
+/* ============================================
+   TÍTULO
+   ============================================ */
+.idade-title {
+    color: #2d2d2d !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    margin: 0 0 4px 0 !important;
+}
+
+.idade-title span {
+    background: linear-gradient(135deg, #ffd700, #f39c12, #d4a017) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* ============================================
+   SUBTÍTULO
+   ============================================ */
+.idade-subtitle {
+    color: #7f8c8d !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    margin: 0 0 24px 0 !important;
+}
+
+.idade-subtitle strong {
+    color: #d4a017 !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   DIVISÓRIA
+   ============================================ */
+.idade-divider {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 14px !important;
+    margin: 0 auto 22px auto !important;
+    width: 65% !important;
+}
+
+.idade-divider-line {
+    flex: 1 !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent) !important;
+}
+
+.idade-divider-icon {
+    color: #ffd700 !important;
+    font-size: 14px !important;
+}
+
+/* ============================================
+   BOTÃO SIM
+   ============================================ */
+.idade-btn-sim {
+    background: linear-gradient(135deg, #ffd700, #f1c40f, #f39c12) !important;
+    color: #2d2d2d !important;
+    border: none !important;
+    padding: 16px 30px !important;
+    border-radius: 14px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 25px rgba(255,215,0,0.4) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+}
+
+.idade-btn-sim:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 45px rgba(255,215,0,0.6) !important;
+}
+
+.idade-btn-sim:active {
+    transform: scale(0.97) !important;
+}
+
+/* ============================================
+   BOTÃO NÃO
+   ============================================ */
+.idade-btn-nao {
+    background: rgba(255,255,255,0.5) !important;
+    color: #7f8c8d !important;
+    border: 1.5px solid rgba(255,215,0,0.3) !important;
+    padding: 14px 30px !important;
+    border-radius: 14px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+.idade-btn-nao:hover {
+    background: rgba(255,255,255,0.8) !important;
+    border-color: #ffd700 !important;
+    color: #2d2d2d !important;
+}
+
+.idade-btn-nao:active {
+    transform: scale(0.97) !important;
+}
+
+/* ============================================
+   RODAPÉ
+   ============================================ */
+.idade-footer {
+    margin-top: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 12px !important;
+    color: #bdc3c7 !important;
+}
+
+.idade-footer .lock-icon {
+    font-size: 12px !important;
+}
+
+.idade-footer .dot {
+    width: 3px !important;
+    height: 3px !important;
+    background: #dce1e3 !important;
+    border-radius: 50% !important;
+}
+
+/* ============================================
+   TELA DE BLOQUEIO (quando clica em NÃO)
+   ============================================ */
+.idade-bloqueado {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    background: rgba(0,0,0,0.92) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 2147483647 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+}
+
+.idade-bloqueado-content {
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    padding: 45px 40px !important;
+    max-width: 420px !important;
+    width: 100% !important;
+    text-align: center !important;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.2) !important;
+    border-top: 5px solid #e74c3c !important;
+    position: relative !important;
+    z-index: 2147483647 !important;
+}
+
+.idade-bloqueado-icon {
+    font-size: 52px !important;
+    display: block !important;
+    margin-bottom: 10px !important;
+}
+
+.idade-bloqueado-title {
+    color: #e74c3c !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    margin: 0 0 8px 0 !important;
+}
+
+.idade-bloqueado-text {
+    color: #7f8c8d !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    margin: 0 0 25px 0 !important;
+}
+
+.idade-spinner {
+    width: 40px !important;
+    height: 40px !important;
+    border: 3px solid #ecf0f1 !important;
+    border-top: 3px solid #e74c3c !important;
+    border-radius: 50% !important;
+    animation: spin 0.8s linear infinite !important;
+    margin: 0 auto 16px auto !important;
+}
+
+.idade-bloqueado-redirect {
+    color: #bdc3c7 !important;
+    font-size: 13px !important;
+}
+
+/* ============================================
+   RESPONSIVO
+   ============================================ */
+@media (max-width: 480px) {
+    .idade-modal {
+        padding: 30px 24px 28px !important;
+        border-radius: 18px !important;
+    }
+    .idade-title {
+        font-size: 20px !important;
+    }
+    .idade-icon {
+        font-size: 44px !important;
+    }
+    .idade-icon-bg {
+        width: 80px !important;
+        height: 80px !important;
+    }
+    .idade-btn-sim {
+        font-size: 15px !important;
+        padding: 14px 20px !important;
+    }
+    .idade-btn-nao {
+        font-size: 13px !important;
+        padding: 12px 20px !important;
+    }
+    .idade-bloqueado-content {
+        padding: 30px 24px !important;
+    }
+}
+
+@media (max-width: 380px) {
+    .idade-modal {
+        padding: 24px 16px 20px !important;
+        border-radius: 14px !important;
+    }
+    .idade-title {
+        font-size: 18px !important;
+    }
+    .idade-icon {
+        font-size: 38px !important;
+    }
+    .idade-icon-bg {
+        width: 65px !important;
+        height: 65px !important;
+    }
+    .idade-btn-sim {
+        font-size: 14px !important;
+        padding: 12px 16px !important;
+    }
+    .idade-btn-nao {
+        font-size: 12px !important;
+        padding: 10px 16px !important;
+    }
+    .idade-bloqueado-content {
+        padding: 24px 16px !important;
+    }
+}
+/*---------------------------------------------------------------*/
+
+/* ============================================
+   CÍRCULO 18+ PROFISSIONAL
+   ============================================ */
+
+.idade-18-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.idade-18-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700, #f39c12, #e67e22);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 
+        0 8px 30px rgba(243, 156, 18, 0.4),
+        inset 0 -3px 0 rgba(0,0,0,0.1),
+        inset 0 3px 0 rgba(255,255,255,0.3);
+    position: relative;
+    animation: idadePulse 2.5s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+/* Brilho no círculo */
+.idade-18-circle::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,215,0,0.2), transparent);
+    z-index: -1;
+    filter: blur(8px);
+}
+
+.idade-18-circle::after {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 20%;
+    width: 30%;
+    height: 20%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.idade-18-text {
+    font-size: 32px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.idade-18-bar {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    line-height: 1;
+    margin: -2px 0;
+}
+
+.idade-18-sub {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+/* ============================================
+   VERSÃO ALTERNATIVA - APENAS NÚMERO
+   ============================================ */
+
+.idade-18-circle-simples {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd700, #f39c12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 8px 30px rgba(243, 156, 18, 0.3);
+    position: relative;
+    animation: idadePulse 2.5s ease-in-out infinite;
+}
+
+.idade-18-circle-simples span {
+    font-size: 38px;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* ============================================
+   VERSÃO COM BORDA DUPLA (MAIS SOFISTICADA)
+   ============================================ */
+
+.idade-18-circle-dupla {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+    box-shadow: 
+        0 0 0 6px #ffd700,
+        0 0 0 12px rgba(255,215,0,0.15),
+        0 8px 30px rgba(0,0,0,0.1);
+    position: relative;
+    animation: idadePulse 2.5s ease-in-out infinite;
+}
+
+.idade-18-circle-dupla span {
+    font-size: 36px;
+    font-weight: 900;
+    color: #f39c12;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 </style> <!--final style-->
@@ -11015,937 +11532,356 @@ document.getElementById('btnUseLocation')?.addEventListener('click', () => {
     alert('Erro ao carregar o sistema. Recarregue a página.');
   }
 });
-
-// =========================
-// FERRAMENTA DE EMERGÊNCIA AVANÇADA - VERSÃO COM MODAL HTML (CORRIGIDA)
-// =========================
-
-window.reporEstoqueManual = async function() {
-  try {
-    console.log('🔍 Buscando produtos para reposição...');
-    
-    // Buscar produtos
-    const querySnapshot = await db.collection('produtos').orderBy('name').get();
-    const produtos = [];
-    
-    // Usar contador MANUAL para garantir números corretos
-    let contador = 0;
-    
-    querySnapshot.forEach((doc) => {
-      contador++; // Incrementar primeiro
-      const dados = doc.data();
-      produtos.push({
-        id: doc.id,
-        numero: contador, // Usar contador manual
-        nome: dados.name || 'Produto sem nome',
-        estoque: dados.stock || 0,
-        precoUnidade: dados.priceUnit || 0,
-        precoKg: dados.priceKg || 0,
-        imagem: dados.img || 'https://via.placeholder.com/100x100?text=Sem+imagem' // <-- ADICIONADO
-      });
-    });
-    
-    console.log(` ${produtos.length} produtos carregados`);
-    
-    // Criar modal HTML
-    const modalHTML = `
-      <div id="estoqueModal" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100002 !important;  // <-- AQUI ESTÁ A CORREÇÃO
-        font-family: Arial, sans-serif;
-      ">
-        <div style="
-          background: white;
-          border-radius: 10px;
-          width: 90%;
-          max-width: 900px; <!-- Aumentado para caber imagens -->
-          max-height: 80vh;
-          overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        ">
-          <div style="
-            background: linear-gradient(90deg, #16a085, #1abc9c);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          ">
-            <h3 style="margin: 0; font-size: 18px;">
-              📦 REPOSIÇÃO DE ESTOQUE - ${produtos.length} PRODUTOS
-            </h3>
-            <button id="closeModalBtn" style="
-              background: #e74c3c;
-              color: white;
-              border: none;
-              padding: 5px 10px;
-              border-radius: 4px;
-              cursor: pointer;
-              font-weight: bold;
-            ">
-              X FECHAR
-            </button>
-          </div>
-          
-          <div style="padding: 15px; max-height: 60vh; overflow-y: auto;">
-            <div style="
-              display: grid;
-              grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); <!-- Aumentado -->
-              gap: 15px;
-              margin-bottom: 15px;
-            " id="produtosGrid">
-              ${produtos.map(prod => {
-                // Calcular preço para mostrar
-                let precoMostrar = 0;
-                let tipoPreco = '';
-                
-                if (prod.precoUnidade > 0) {
-                  precoMostrar = prod.precoUnidade;
-                  tipoPreco = '(unidade)';
-                } else if (prod.precoKg > 0) {
-                  precoMostrar = prod.precoKg;
-                  tipoPreco = '(kg)';
-                }
-                
-                return `
-                <div style="
-                  border: 1px solid #ddd;
-                  border-radius: 8px;
-                  padding: 12px;
-                  background: #f9f9f9;
-                  cursor: pointer;
-                  transition: all 0.2s;
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  text-align: center;
-                " 
-                class="produto-item"
-                data-numero="${prod.numero}"
-                onclick="selecionarProdutoEstoqueModal(${prod.numero})">
-                
-                  <!-- IMAGEM DO PRODUTO (NOVA) -->
-                  <div style="
-                    width: 100%;
-                    height: 120px;
-                    margin-bottom: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    border-radius: 6px;
-                    background: #f0f0f0;
-                  ">
-                    <img src="${prod.imagem}" 
-                         alt="${prod.nome}"
-                         style="
-                           max-width: 100%;
-                           max-height: 100%;
-                           object-fit: contain;
-                         "
-                         onerror="this.src='https://via.placeholder.com/100x100?text=Sem+imagem'">
-                  </div>
-                  
-                  <!-- INFORMAÇÕES DO PRODUTO -->
-                  <div style="width: 100%;">
-                    <div style="
-                      font-weight: bold; 
-                      color: #2c3e50; 
-                      margin-bottom: 5px;
-                      font-size: 14px;
-                      height: 40px;
-                      overflow: hidden;
-                      display: -webkit-box;
-                      -webkit-line-clamp: 2;
-                      -webkit-box-orient: vertical;
-                    ">
-                      [${prod.numero}] ${prod.nome}
-                    </div>
-                    
-                    <!-- ESTOQUE COM ÍCONE -->
-                    <div style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      gap: 5px;
-                      margin: 8px 0;
-                      font-size: 13px;
-                      color: #555;
-                      background: #e8f5e9;
-                      padding: 4px 8px;
-                      border-radius: 4px;
-                    ">
-                      <span style="font-weight: bold;">📦</span>
-                      <span>Estoque: <strong>${prod.estoque}</strong></span>
-                    </div>
-                    
-                    <!-- PREÇO -->
-                    <div style="
-                      font-size: 13px; 
-                      color: ${precoMostrar > 0 ? '#27ae60' : '#e74c3c'}; 
-                      background: ${precoMostrar > 0 ? '#f0f9f0' : '#fef0f0'};
-                      padding: 4px 8px;
-                      border-radius: 4px;
-                      margin-top: 5px;
-                    ">
-                      <span style="font-weight: bold;">💰</span>
-                      R$ ${precoMostrar.toFixed(2)}
-                      ${tipoPreco ? ' ' + tipoPreco : ''}
-                    </div>
-                  </div>
-                </div>
-              `}).join('')}
-            </div>
-            
-            <div style="
-              border-top: 2px solid #eee;
-              padding-top: 15px;
-              text-align: center;
-            ">
-              <div style="margin-bottom: 10px; font-weight: bold; color: #7f8c8d;">
-                OU DIGITE O NÚMERO DO PRODUTO:
-              </div>
-              <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
-                <input type="number" 
-                  id="numeroProdutoInput"
-                  placeholder="Número (1-${produtos.length})"
-                  min="1"
-                  max="${produtos.length}"
-                  style="
-                    padding: 10px;
-                    border: 2px solid #3498db;
-                    border-radius: 6px;
-                    width: 120px;
-                    text-align: center;
-                    font-size: 16px;
-                  ">
-                <button id="selecionarPorNumeroBtn" style="
-                  background: #3498db;
-                  color: white;
-                  border: none;
-                  padding: 10px 20px;
-                  border-radius: 6px;
-                  cursor: pointer;
-                  font-weight: bold;
-                  font-size: 14px;
-                ">
-                  📋 SELECIONAR
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div style="
-            background: #f8f9fa;
-            padding: 12px 20px;
-            text-align: center;
-            border-top: 1px solid #eee;
-            color: #666;
-            font-size: 13px;
-          ">
-            <strong>${produtos.length}</strong> produtos disponíveis • Clique em um produto ou digite o número
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Remover modal anterior se existir
-    const modalAntigo = document.getElementById('estoqueModal');
-    if (modalAntigo) modalAntigo.remove();
-    
-    // Limpar função anterior
-    if (window.selecionarProdutoEstoqueModal) {
-      delete window.selecionarProdutoEstoqueModal;
-    }
-    
-    // Adicionar modal ao corpo
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer);
-    
-    // Função para selecionar produto
-    window.selecionarProdutoEstoqueModal = async function(numeroProduto) {
-      console.log(' Produto selecionado:', numeroProduto);
-      
-      const produto = produtos.find(p => p.numero === numeroProduto);
-      
-      if (!produto) {
-        alert('❌ Produto não encontrado!');
-        return;
-      }
-      
-      // Remover modal
-      const modal = document.getElementById('estoqueModal');
-      if (modal) modal.remove();
-      
-      // Pedir nova quantidade
-      const novaQtd = prompt(
-        `📊 ATUALIZAR ESTOQUE\n\n` +
-        `Produto: ${produto.nome}\n` +
-        `Estoque atual: ${produto.estoque}\n\n` +
-        `Digite a nova quantidade:`
-      );
-      
-      if (novaQtd === null) {
-        console.log(' Operação cancelada pelo usuário');
-        return;
-      }
-      
-      const quantidade = parseInt(novaQtd);
-      
-      if (isNaN(quantidade) || quantidade < 0) {
-        alert('❌ Quantidade inválida! Digite um número válido (ex: 0, 10, 25).');
-        return;
-      }
-      
-      // Confirmar
-      const diferenca = quantidade - produto.estoque;
-      const confirmar = confirm(
-        `⚠️ CONFIRMAR ATUALIZAÇÃO?\n\n` +
-        `Produto: ${produto.nome}\n` +
-        `Estoque atual: ${produto.estoque}\n` +
-        `Novo estoque: ${quantidade}\n` +
-        `Diferença: ${diferenca >= 0 ? '+' : ''}${diferenca} unidades`
-      );
-      
-      if (!confirmar) {
-        alert('❌ Atualização cancelada.');
-        return;
-      }
-      
-      // Mostrar loading
-      const loadingMsg = `🔄 Atualizando ${produto.nome}...`;
-      const loadingDiv = document.createElement('div');
-      loadingDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #2c3e50;
-        color: white;
-        padding: 20px 30px;
-        border-radius: 10px;
-        z-index: 10000;
-        font-weight: bold;
-      `;
-      loadingDiv.textContent = loadingMsg;
-      document.body.appendChild(loadingDiv);
-      
-      try {
-        // Atualizar no Firebase
-        await db.collection('produtos').doc(produto.id).update({
-          stock: quantidade,
-          atualizadoEm: new Date().toISOString()
-        });
-        
-        // 📝 LOG DE ALTERAÇÃO DE ESTOQUE
-        if (typeof sistemaLogs !== 'undefined' && sistemaLogs.registrar) {
-          await sistemaLogs.registrar('estoque_alterado', {
-            produtoId: produto.id,
-            produtoNome: produto.nome,
-            estoqueAnterior: produto.estoque,
-            estoqueNovo: quantidade,
-            diferenca: diferenca,
-            adminId: auth.currentUser?.uid
-          });
-        }
-        
-        // Remover loading
-        loadingDiv.remove();
-        
-        // Mostrar sucesso
-        alert(`✅ ESTOQUE ATUALIZADO!\n\n` +
-              `📦 ${produto.nome}\n` +
-              `🔄 ${produto.estoque} → ${quantidade}\n` +
-              `📈 ${diferenca >= 0 ? '+' : ''}${diferenca} unidades`);
-        
-        // 🔥 INVALIDAR CACHE
-        if (typeof produtosCache !== 'undefined') {
-          produtosCache = null;
-        }
-        if (typeof ultimoCarregamentoCache !== 'undefined') {
-          ultimoCarregamentoCache = null;
-        }
-        
-        // Recarregar produtos
-        if (typeof carregarProdutos === 'function') {
-          setTimeout(() => {
-            carregarProdutos();
-            console.log(' Catálogo recarregado');
-          }, 500);
-        }
-        
-      } catch (error) {
-        loadingDiv.remove();
-        console.error(' Erro ao atualizar:', error);
-        if (typeof sistemaLogs !== 'undefined' && sistemaLogs.registrar) {
-          await sistemaLogs.registrar('estoque_erro', {
-            erro: error.message,
-            produtoId: produto.id,
-            adminId: auth.currentUser?.uid
-          });
-        }
-        alert(`❌ Erro ao atualizar estoque:\n\n${error.message}`);
-      }
-    };
-    
-    // Configurar eventos
-    document.getElementById('closeModalBtn').addEventListener('click', function() {
-      const modal = document.getElementById('estoqueModal');
-      if (modal) modal.remove();
-    });
-    
-    document.getElementById('selecionarPorNumeroBtn').addEventListener('click', function() {
-      const input = document.getElementById('numeroProdutoInput');
-      const numero = parseInt(input.value);
-      
-      if (isNaN(numero) || numero < 1 || numero > produtos.length) {
-        alert(`❌ Número inválido!\n\nDigite um número entre 1 e ${produtos.length}`);
-        return;
-      }
-      
-      window.selecionarProdutoEstoqueModal(numero);
-    });
-    
-    document.getElementById('numeroProdutoInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        document.getElementById('selecionarPorNumeroBtn').click();
-      }
-    });
-    
-    // Fechar modal ao clicar fora
-    document.getElementById('estoqueModal').addEventListener('click', function(e) {
-      if (e.target.id === 'estoqueModal') {
-        this.remove();
-      }
-    });
-    
-    // Adicionar efeito hover aos cards
-    setTimeout(() => {
-      const cards = document.querySelectorAll('.produto-item');
-      cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-          this.style.transform = 'translateY(-3px)';
-          this.style.boxShadow = '0 6px 15px rgba(0,0,0,0.1)';
-          this.style.borderColor = '#3498db';
-          this.style.background = '#f0f8ff';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-          this.style.transform = 'translateY(0)';
-          this.style.boxShadow = 'none';
-          this.style.borderColor = '#ddd';
-          this.style.background = '#f9f9f9';
-        });
-      });
-    }, 100);
-    
-  } catch (error) {
-    console.error(' Erro na função reporEstoqueManual:', error);
-    alert('❌ Erro ao carregar produtos: ' + error.message);
-  }
-};
-
-//--------------------------------------------------------------------------------------------------------------------------------
-  // =========================
 // FERRAMENTA DE EMERGÊNCIA AVANÇADA - VERSÃO CORRIGIDA (CAMPOS DINÂMICOS)
 // =========================
 // =========================
 // REPOSIÇÃO RÁPIDA DE ESTOQUE - VERSÃO COMPLETA COM FOTOS
 // =========================
 
+// ============================================
+// REPOSIÇÃO DE ESTOQUE - COM BUSCA POR NOME
+// ============================================
+
 window.reporEstoqueManual = async function() {
   try {
     console.log('🔍 Buscando produtos para reposição...');
     
-    // Buscar produtos
     const querySnapshot = await db.collection('produtos').orderBy('name').get();
     const produtos = [];
-    
-    // Usar contador MANUAL para garantir números corretos
     let contador = 0;
     
     querySnapshot.forEach((doc) => {
-      contador++; // Incrementar primeiro
+      contador++;
       const dados = doc.data();
+      const estoqueAtual = dados.estoque !== undefined ? dados.estoque : (dados.stock || 0);
+      
       produtos.push({
         id: doc.id,
-        numero: contador, // Usar contador manual
+        numero: contador,
         nome: dados.name || 'Produto sem nome',
-        estoque: dados.estoque || 0,
-        stock: dados.stock || 0,
-        precoUnidade: dados.priceUnit || 0,
-        precoKg: dados.priceKg || 0,
+        desc: dados.desc || '',
+        estoque: estoqueAtual,
+        preco: dados.priceUnit || dados.priceKg || 0,
         imagem: dados.img || 'https://via.placeholder.com/100x100?text=Sem+imagem'
       });
     });
     
-    console.log(` ${produtos.length} produtos carregados`);
+    console.log(`📦 ${produtos.length} produtos carregados`);
     
-    // Criar modal HTML (IGUAL À VERSÃO ANTERIOR)
-    const modalHTML = `
-      <div id="estoqueModal" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.7);
+    // REMOVER MODAL ANTIGO
+    const modalAntigo = document.getElementById('estoqueModal');
+    if (modalAntigo) modalAntigo.remove();
+    
+    // CRIAR MODAL COM BUSCA POR NOME
+    const modal = document.createElement('div');
+    modal.id = 'estoqueModal';
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100002 !important;
+      font-family: Arial, sans-serif;
+    `;
+    
+    modal.innerHTML = `
+      <div style="
+        background: white;
+        border-radius: 10px;
+        width: 95%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 100002 !important;  // <-- AQUI ESTÁ A CORREÇÃO
-        font-family: Arial, sans-serif;
+        flex-direction: column;
       ">
+        <!-- CABEÇALHO -->
         <div style="
-          background: white;
-          border-radius: 10px;
-          width: 90%;
-          max-width: 900px;
-          max-height: 80vh;
-          overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          background: linear-gradient(90deg, #16a085, #1abc9c);
+          color: white;
+          padding: 12px 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-shrink: 0;
         ">
-          <div style="
-            background: linear-gradient(90deg, #16a085, #1abc9c);
+          <h3 style="margin: 0; font-size: 17px;">
+            📦 REPOSIÇÃO DE ESTOQUE - ${produtos.length} PRODUTOS
+          </h3>
+          <button onclick="document.getElementById('estoqueModal').remove()" style="
+            background: #e74c3c;
             color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
           ">
-            <h3 style="margin: 0; font-size: 18px;">
-              📦 REPOSIÇÃO DE ESTOQUE - ${produtos.length} PRODUTOS
-            </h3>
-            <button id="closeModalBtn" style="
+            ✕ FECHAR
+          </button>
+        </div>
+        
+        <!-- 🔥 CAMPO DE BUSCA POR NOME NO TOPO -->
+        <div style="
+          padding: 12px 20px;
+          background: #f8f9fa;
+          border-bottom: 2px solid #e0e0e0;
+          flex-shrink: 0;
+        ">
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" 
+              id="campoBuscaNome" 
+              placeholder="🔍 DIGITE O NOME DO PRODUTO..."
+              style="
+                flex: 1;
+                padding: 12px 16px;
+                border: 2px solid #3498db;
+                border-radius: 8px;
+                font-size: 16px;
+                box-sizing: border-box;
+                background: white;
+                min-width: 200px;
+              "
+              autofocus>
+            <span style="font-size: 14px; color: #666; white-space: nowrap;">
+              <span id="contadorBusca">${produtos.length}</span> produtos
+            </span>
+            <button id="btnLimparBuscaNome" style="
               background: #e74c3c;
               color: white;
               border: none;
-              padding: 5px 10px;
-              border-radius: 4px;
+              padding: 10px 16px;
+              border-radius: 6px;
               cursor: pointer;
               font-weight: bold;
+              display: none;
+              font-size: 14px;
             ">
-              X FECHAR
+              ✕
             </button>
           </div>
-          
-          <div style="padding: 15px; max-height: 60vh; overflow-y: auto;">
-            <div style="
-              display: grid;
-              grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-              gap: 15px;
-              margin-bottom: 15px;
-            " id="produtosGrid">
-              ${produtos.map(prod => {
-                // Calcular preço para mostrar
-                let precoMostrar = 0;
-                let tipoPreco = '';
-                
-                if (prod.precoUnidade > 0) {
-                  precoMostrar = prod.precoUnidade;
-                  tipoPreco = '(unidade)';
-                } else if (prod.precoKg > 0) {
-                  precoMostrar = prod.precoKg;
-                  tipoPreco = '(kg)';
-                }
-                
-                return `
+        </div>
+        
+        <!-- LISTA DE PRODUTOS -->
+        <div style="padding: 12px; max-height: 55vh; overflow-y: auto; flex: 1;">
+          <div style="
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+          " id="gridProdutosBusca">
+            ${produtos.map(prod => `
+              <div style="
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 10px;
+                background: #f9f9f9;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+              " 
+              class="item-produto-busca"
+              data-nome="${prod.nome.toLowerCase()}"
+              data-numero="${prod.numero}"
+              onclick="selecionarProdutoBusca(${prod.numero})">
+              
                 <div style="
-                  border: 1px solid #ddd;
-                  border-radius: 8px;
-                  padding: 12px;
-                  background: #f9f9f9;
-                  cursor: pointer;
-                  transition: all 0.2s;
+                  width: 100%;
+                  height: 60px;
+                  margin-bottom: 5px;
                   display: flex;
-                  flex-direction: column;
                   align-items: center;
-                  text-align: center;
-                " 
-                class="produto-item"
-                data-numero="${prod.numero}"
-                onclick="selecionarProdutoEstoqueModal(${prod.numero})">
+                  justify-content: center;
+                  overflow: hidden;
+                  border-radius: 6px;
+                  background: #f0f0f0;
+                ">
+                  <img src="${prod.imagem}" 
+                       alt="${prod.nome}"
+                       style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                       onerror="this.style.display='none'">
+                </div>
                 
-                  <!-- IMAGEM DO PRODUTO -->
+                <div style="width: 100%;">
+                  <div style="font-weight: bold; color: #2c3e50; font-size: 13px; height: 28px; overflow: hidden;">
+                    ${prod.nome}
+                  </div>
+                  
                   <div style="
-                    width: 100%;
-                    height: 120px;
-                    margin-bottom: 10px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    overflow: hidden;
-                    border-radius: 6px;
-                    background: #f0f0f0;
+                    gap: 4px;
+                    margin: 4px 0;
+                    font-size: 12px;
+                    color: #555;
+                    background: ${prod.estoque > 0 ? '#e8f5e9' : '#fef0f0'};
+                    padding: 2px 8px;
+                    border-radius: 4px;
                   ">
-                    <img src="${prod.imagem}" 
-                         alt="${prod.nome}"
-                         style="
-                           max-width: 100%;
-                           max-height: 100%;
-                           object-fit: contain;
-                         "
-                         onerror="this.src='https://via.placeholder.com/100x100?text=Sem+imagem'">
+                    <span>📦</span>
+                    <span>Estoque: <strong style="color: ${prod.estoque > 0 ? '#27ae60' : '#e74c3c'};">${prod.estoque}</strong></span>
                   </div>
                   
-                  <!-- INFORMAÇÕES DO PRODUTO -->
-                  <div style="width: 100%;">
-                    <div style="
-                      font-weight: bold; 
-                      color: #2c3e50; 
-                      margin-bottom: 5px;
-                      font-size: 14px;
-                      height: 40px;
-                      overflow: hidden;
-                      display: -webkit-box;
-                      -webkit-line-clamp: 2;
-                      -webkit-box-orient: vertical;
-                    ">
-                      [${prod.numero}] ${prod.nome}
-                    </div>
-                    
-                    <!-- ESTOQUE COM ÍCONE -->
-                    <div style="
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      gap: 5px;
-                      margin: 8px 0;
-                      font-size: 13px;
-                      color: #555;
-                      background: #e8f5e9;
-                      padding: 4px 8px;
-                      border-radius: 4px;
-                    ">
-                      <span style="font-weight: bold;">📦</span>
-                      <span>Estoque: <strong>${prod.estoque}</strong></span>
-                    </div>
-                    
-                    <!-- PREÇO -->
-                    <div style="
-                      font-size: 13px; 
-                      color: ${precoMostrar > 0 ? '#27ae60' : '#e74c3c'}; 
-                      background: ${precoMostrar > 0 ? '#f0f9f0' : '#fef0f0'};
-                      padding: 4px 8px;
-                      border-radius: 4px;
-                      margin-top: 5px;
-                    ">
-                      <span style="font-weight: bold;">💰</span>
-                      R$ ${precoMostrar.toFixed(2)}
-                      ${tipoPreco ? ' ' + tipoPreco : ''}
-                    </div>
+                  <div style="font-size: 11px; color: #27ae60; background: #f0f9f0; padding: 2px 8px; border-radius: 4px; margin-top: 3px;">
+                    💰 R$ ${prod.preco.toFixed(2)}
                   </div>
                 </div>
-              `}).join('')}
-            </div>
-            
-            <div style="
-              border-top: 2px solid #eee;
-              padding-top: 15px;
-              text-align: center;
-            ">
-              <div style="margin-bottom: 10px; font-weight: bold; color: #7f8c8d;">
-                OU DIGITE O NÚMERO DO PRODUTO:
               </div>
-              <div style="display: flex; gap: 10px; justify-content: center; align-items: center;">
-                <input type="number" 
-                  id="numeroProdutoInput"
-                  placeholder="Número (1-${produtos.length})"
-                  min="1"
-                  max="${produtos.length}"
-                  style="
-                    padding: 10px;
-                    border: 2px solid #3498db;
-                    border-radius: 6px;
-                    width: 120px;
-                    text-align: center;
-                    font-size: 16px;
-                  ">
-                <button id="selecionarPorNumeroBtn" style="
-                  background: #3498db;
-                  color: white;
-                  border: none;
-                  padding: 10px 20px;
-                  border-radius: 6px;
-                  cursor: pointer;
-                  font-weight: bold;
-                  font-size: 14px;
-                ">
-                  📋 SELECIONAR
-                </button>
-              </div>
-            </div>
+            `).join('')}
           </div>
-          
-          <div style="
-            background: #f8f9fa;
-            padding: 12px 20px;
-            text-align: center;
-            border-top: 1px solid #eee;
-            color: #666;
-            font-size: 13px;
-          ">
-            <strong>${produtos.length}</strong> produtos disponíveis • Clique em um produto ou digite o número
-          </div>
+        </div>
+        
+        <div style="
+          background: #f8f9fa;
+          padding: 6px 20px;
+          text-align: center;
+          border-top: 1px solid #eee;
+          color: #666;
+          font-size: 11px;
+          flex-shrink: 0;
+        ">
+          <strong>${produtos.length}</strong> produtos • Clique em um produto para editar
         </div>
       </div>
     `;
     
-    // Remover modal anterior se existir
-    const modalAntigo = document.getElementById('estoqueModal');
-    if (modalAntigo) modalAntigo.remove();
+    document.body.appendChild(modal);
     
-    // Limpar função anterior
-    if (window.selecionarProdutoEstoqueModal) {
-      delete window.selecionarProdutoEstoqueModal;
+    // ============================================
+    // BUSCA EM TEMPO REAL
+    // ============================================
+    const buscaInput = document.getElementById('campoBuscaNome');
+    const grid = document.getElementById('gridProdutosBusca');
+    const contadorBusca = document.getElementById('contadorBusca');
+    const btnLimpar = document.getElementById('btnLimparBuscaNome');
+    
+    if (buscaInput) {
+      buscaInput.addEventListener('input', function() {
+        const termo = this.value.toLowerCase().trim();
+        const items = grid.querySelectorAll('.item-produto-busca');
+        let visiveis = 0;
+        
+        items.forEach(item => {
+          const nome = item.getAttribute('data-nome') || '';
+          const numero = item.getAttribute('data-numero') || '';
+          const match = nome.includes(termo) || numero.includes(termo);
+          
+          if (match || termo === '') {
+            item.style.display = 'flex';
+            visiveis++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+        
+        if (contadorBusca) contadorBusca.textContent = visiveis;
+        if (btnLimpar) btnLimpar.style.display = termo.length > 0 ? 'block' : 'none';
+        
+        const msgVazio = grid.querySelector('.msg-vazio-busca');
+        if (visiveis === 0 && termo.length > 0) {
+          if (!msgVazio) {
+            const vazio = document.createElement('div');
+            vazio.className = 'msg-vazio-busca';
+            vazio.style.cssText = 'grid-column:1/-1;text-align:center;padding:40px 20px;color:#666;';
+            vazio.innerHTML = `
+              <div style="font-size:40px;margin-bottom:10px;">🔍</div>
+              <h3 style="font-size:16px;margin:0;">Nenhum produto encontrado</h3>
+              <p style="margin:5px 0 0 0;font-size:13px;color:#999;">"${this.value}"</p>
+            `;
+            grid.appendChild(vazio);
+          }
+        } else {
+          if (msgVazio) msgVazio.remove();
+        }
+      });
+      
+      setTimeout(() => buscaInput.focus(), 300);
     }
     
-    // Adicionar modal ao corpo
-    const modalContainer = document.createElement('div');
-    modalContainer.innerHTML = modalHTML;
-    document.body.appendChild(modalContainer);
+    if (btnLimpar) {
+      btnLimpar.addEventListener('click', function() {
+        if (buscaInput) {
+          buscaInput.value = '';
+          buscaInput.dispatchEvent(new Event('input'));
+          buscaInput.focus();
+        }
+      });
+    }
     
-    // =========================
-    // FUNÇÃO DE SELEÇÃO - AGORA ATUALIZA AMBOS OS CAMPOS
-    // =========================
-    window.selecionarProdutoEstoqueModal = async function(numeroProduto) {
-      console.log(' Produto selecionado:', numeroProduto);
-      
-      const produto = produtos.find(p => p.numero === numeroProduto);
-      
+    // ============================================
+    // FUNÇÃO SELECIONAR PRODUTO
+    // ============================================
+    window.selecionarProdutoBusca = async function(numero) {
+      const produto = produtos.find(p => p.numero === numero);
       if (!produto) {
         alert('❌ Produto não encontrado!');
         return;
       }
       
-      // Remover modal
-      const modal = document.getElementById('estoqueModal');
-      if (modal) modal.remove();
+      document.getElementById('estoqueModal').remove();
       
-      // Pedir nova quantidade
       const novaQtd = prompt(
         `📊 ATUALIZAR ESTOQUE\n\n` +
-        `Produto: ${produto.nome}\n` +
-        `Estoque atual: ${produto.estoque}\n` +
-        `Stock atual: ${produto.stock}\n` +
-        `${produto.estoque !== produto.stock ? '⚠️ CAMPOS DIFERENTES!\n' : ''}\n` +
-        `Digite a nova quantidade:`
+        `📦 ${produto.nome}\n` +
+        `💰 R$ ${produto.preco.toFixed(2)}\n` +
+        `📦 Estoque atual: ${produto.estoque}\n\n` +
+        `Digite a NOVA quantidade:`
       );
       
-      if (novaQtd === null) {
-        console.log(' Operação cancelada pelo usuário');
-        return;
-      }
+      if (novaQtd === null) return;
       
       const quantidade = parseInt(novaQtd);
-      
       if (isNaN(quantidade) || quantidade < 0) {
-        alert('❌ Quantidade inválida! Digite um número válido (ex: 0, 10, 25).');
+        alert('❌ Quantidade inválida!');
         return;
       }
       
-      // Confirmar
-      const diferenca = quantidade - produto.estoque;
-      const confirmar = confirm(
-        `⚠️ CONFIRMAR ATUALIZAÇÃO?\n\n` +
-        `Produto: ${produto.nome}\n` +
-        `Estoque atual: ${produto.estoque}\n` +
-        `Stock atual: ${produto.stock}\n` +
-        `Novo valor: ${quantidade}\n` +
-        `Diferença: ${diferenca >= 0 ? '+' : ''}${diferenca} unidades\n\n` +
-        `✅ Ambos os campos (estoque E stock) serão atualizados!`
-      );
+      if (!confirm(`⚠️ CONFIRMAR?\n\n📦 ${produto.nome}\n📊 ${produto.estoque} → ${quantidade}`)) return;
       
-      if (!confirmar) {
-        alert('❌ Atualização cancelada.');
-        return;
-      }
-      
-      // Mostrar loading
-      const loadingMsg = `🔄 Atualizando ${produto.nome}...`;
-      const loadingDiv = document.createElement('div');
-      loadingDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #2c3e50;
-        color: white;
-        padding: 20px 30px;
-        border-radius: 10px;
-        z-index: 10000;
-        font-weight: bold;
-      `;
-      loadingDiv.textContent = loadingMsg;
-      document.body.appendChild(loadingDiv);
+      const loading = document.createElement('div');
+      loading.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#2c3e50;color:white;padding:20px 30px;border-radius:10px;z-index:10000;font-weight:bold;';
+      loading.textContent = '🔄 Atualizando...';
+      document.body.appendChild(loading);
       
       try {
-        // ✅✅✅ AQUI ESTÁ A CORREÇÃO: ATUALIZAR AMBOS OS CAMPOS ✅✅✅
         await db.collection('produtos').doc(produto.id).update({
-          estoque: quantidade,  // ← Campo novo
-          stock: quantidade,     // ← Campo antigo (AGORA ATUALIZADO TAMBÉM!)
-          atualizadoEm: new Date().toISOString(),
-          ultimaAtualizacao: new Date().toISOString()
+          estoque: quantidade,
+          stock: quantidade,
+          atualizadoEm: new Date().toISOString()
         });
         
-        // 📝 LOG DE ALTERAÇÃO DE ESTOQUE
-        if (typeof sistemaLogs !== 'undefined' && sistemaLogs.registrar) {
-          await sistemaLogs.registrar('estoque_alterado', {
-            produtoId: produto.id,
-            produtoNome: produto.nome,
-            estoqueAnterior: produto.estoque,
-            stockAnterior: produto.stock,
-            estoqueNovo: quantidade,
-            stockNovo: quantidade,
-            diferenca: diferenca,
-            adminId: auth.currentUser?.uid
-          });
-        }
+        loading.remove();
+        alert(`✅ ${produto.nome} atualizado!\n📦 ${produto.estoque} → ${quantidade}`);
         
-        // Remover loading
-        loadingDiv.remove();
-        
-        // Mostrar sucesso
-        alert(`✅ ESTOQUE ATUALIZADO!\n\n` +
-              `📦 ${produto.nome}\n` +
-              `🔄 Estoque: ${produto.estoque} → ${quantidade}\n` +
-              `🔄 Stock: ${produto.stock} → ${quantidade}\n` +
-              `📈 ${diferenca >= 0 ? '+' : ''}${diferenca} unidades\n\n` +
-              `✅ Ambos os campos sincronizados!`);
-        
-        // 🔥 INVALIDAR CACHE
-        if (typeof produtosCache !== 'undefined') {
-          produtosCache = null;
-        }
-        if (typeof ultimoCarregamentoCache !== 'undefined') {
-          ultimoCarregamentoCache = null;
-        }
-        
-        // Recarregar produtos
-        if (typeof carregarProdutos === 'function') {
-          setTimeout(() => {
-            carregarProdutos();
-            console.log(' Catálogo recarregado');
-          }, 500);
-        }
+        if (typeof produtosCache !== 'undefined') produtosCache = null;
+        if (typeof ultimoCarregamentoCache !== 'undefined') ultimoCarregamentoCache = null;
+        if (typeof carregarProdutos === 'function') setTimeout(carregarProdutos, 500);
         
       } catch (error) {
-        loadingDiv.remove();
-        console.error(' Erro ao atualizar:', error);
-        if (typeof sistemaLogs !== 'undefined' && sistemaLogs.registrar) {
-          await sistemaLogs.registrar('estoque_erro', {
-            erro: error.message,
-            produtoId: produto.id,
-            adminId: auth.currentUser?.uid
-          });
-        }
-        alert(`❌ Erro ao atualizar estoque:\n\n${error.message}`);
+        loading.remove();
+        alert('❌ Erro: ' + error.message);
       }
     };
     
-    // Configurar eventos
-    document.getElementById('closeModalBtn').addEventListener('click', function() {
-      const modal = document.getElementById('estoqueModal');
-      if (modal) modal.remove();
-    });
-    
-    document.getElementById('selecionarPorNumeroBtn').addEventListener('click', function() {
-      const input = document.getElementById('numeroProdutoInput');
-      const numero = parseInt(input.value);
-      
-      if (isNaN(numero) || numero < 1 || numero > produtos.length) {
-        alert(`❌ Número inválido!\n\nDigite um número entre 1 e ${produtos.length}`);
-        return;
-      }
-      
-      window.selecionarProdutoEstoqueModal(numero);
-    });
-    
-    document.getElementById('numeroProdutoInput').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        document.getElementById('selecionarPorNumeroBtn').click();
-      }
-    });
-    
-    // Fechar modal ao clicar fora
-    document.getElementById('estoqueModal').addEventListener('click', function(e) {
-      if (e.target.id === 'estoqueModal') {
-        this.remove();
-      }
-    });
-    
-    // Adicionar efeito hover aos cards
-    setTimeout(() => {
-      const cards = document.querySelectorAll('.produto-item');
-      cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-          this.style.transform = 'translateY(-3px)';
-          this.style.boxShadow = '0 6px 15px rgba(0,0,0,0.1)';
-          this.style.borderColor = '#3498db';
-          this.style.background = '#f0f8ff';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-          this.style.transform = 'translateY(0)';
-          this.style.boxShadow = 'none';
-          this.style.borderColor = '#ddd';
-          this.style.background = '#f9f9f9';
-        });
-      });
-    }, 100);
-    
   } catch (error) {
-    console.error(' Erro na função reporEstoqueManual:', error);
-    alert('❌ Erro ao carregar produtos: ' + error.message);
+    console.error('❌ Erro:', error);
+    alert('❌ Erro: ' + error.message);
   }
 };
 
-// =========================
-// GARANTIR QUE A FUNÇÃO ESTEJA DISPONÍVEL SEMPRE
-// =========================
-
-// 1. Executar quando a página carrega
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Página carregada - reporEstoqueManual disponível');
-  });
-} else {
-  console.log('✅ reporEstoqueManual disponível imediatamente');
-}
-
-// 2. Adicionar atalho de inicialização
-window.inicializarReposicaoEstoque = function() {
-  console.log('🚀 Inicializando sistema de reposição...');
-  
-  if (typeof window.reporEstoqueManual !== 'function') {
-    console.error('❌ reporEstoqueManual não está definida!');
-    return false;
-  }
-  
-  console.log('✅ Sistema de reposição pronto!');
-  console.log('📝 Comandos disponíveis:');
-  console.log('   • reporEstoqueManual() - Abrir reposição com fotos');
-  console.log('   • sincronizarTodosCamposEstoque() - Sincronizar estoque/stock');
-  
-  return true;
-};
-
-// 3. Inicializar automaticamente
-setTimeout(inicializarReposicaoEstoque, 1000);
-
-// 4. Teste rápido para verificar
-console.log('🔍 Verificando função...');
-console.log('reporEstoqueManual definida?', typeof window.reporEstoqueManual === 'function');
-
+console.log('✅ REPOSIÇÃO DE ESTOQUE ATUALIZADA!');
+console.log('📌 Agora com BUSCA POR NOME no TOPO!');
+console.log('🚀 Execute: reporEstoqueManual()');
 //--------------------------------------------------------------------------------------------------------------------------------
 
 // =========================
@@ -17043,8 +16979,10 @@ console.log('🔄 Botão Alterar Pedido adicionado');
 console.log('👉 Execute: abrirListaPedidos()');
 
 // ============================================
-// FUNÇÃO PARA ABRIR MODAL DO PRODUTO (JANELA FLUTUANTE)
+// FUNÇÃO PARA ABRIR MODAL DO PRODUTO - VERSÃO CORRIGIDA
+// Com indicador de "já reservado no carrinho"
 // ============================================
+
 function abrirModalProduto(produtoId) {
     console.log('🖼️ Abrindo modal do produto:', produtoId);
     
@@ -17112,8 +17050,14 @@ function abrirModalProduto(produtoId) {
                 </button>
             </div>
             
-            <div class="product-modal-stock">
-                📦 Estoque disponível: <span id="modal_stock_${produtoId}">${produto.stock || 0}</span> unidades
+            <!-- 🔥 ESTOQUE REAL + INDICADOR DE RESERVA -->
+            <div class="product-modal-stock" style="border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                📦 Estoque disponível: <span id="modal_stock_${produtoId}" style="font-weight: bold; color: #27ae60;">${produto.stock || 0}</span> unidades
+                ${cartQty > 0 ? `
+                    <div style="font-size: 11px; color: #f39c12; margin-top: 4px; background: #fef9e7; padding: 4px 8px; border-radius: 4px;">
+                        ⚠️ Você já reservou <strong>${cartQty}</strong> unidade(s) no carrinho
+                    </div>
+                ` : ''}
             </div>
         </div>
     `;
@@ -17137,22 +17081,31 @@ function abrirModalProduto(produtoId) {
     };
     document.addEventListener('keydown', closeOnEsc);
     
-    // Verificar estoque em tempo real
+    // 🔥 BUSCAR ESTOQUE REAL DO FIREBASE (sempre que abrir)
     setTimeout(async () => {
         try {
             const snap = await db.collection('produtos').doc(produtoId).get();
             if (snap.exists) {
                 const data = snap.data();
-                const stockAtual = data.stock || 0;
+                // Usar o campo correto (estoque OU stock)
+                const stockAtual = data.estoque !== undefined ? data.estoque : (data.stock || 0);
                 const stockSpan = document.getElementById(`modal_stock_${produtoId}`);
                 if (stockSpan) {
                     stockSpan.textContent = stockAtual;
+                    console.log(`📊 Estoque real: ${stockAtual} unidades`);
+                    
+                    // Atualizar a cor do estoque
+                    if (stockAtual > 0) {
+                        stockSpan.style.color = '#27ae60';
+                    } else {
+                        stockSpan.style.color = '#e74c3c';
+                    }
                 }
             }
         } catch (e) {
-            console.log('Erro ao verificar estoque:', e);
+            console.log('Erro ao buscar estoque:', e);
         }
-    }, 500);
+    }, 300);
 }
 
 // =========================
@@ -17605,9 +17558,259 @@ async function gerenciarClientes() {
 
 
 /*------------------------------------------------------------------------------------*/
+// ============================================
+// 🔞 VERIFICAÇÃO DE IDADE - Z-INDEX MÁXIMO
+// ============================================
+
+(function() {
+    'use strict';
+    
+    const COOKIE_NOME = 'bebidas_idade_ouro';
+    const DIAS_EXPIRACAO = 30;
+    
+    function setCookie(nome, valor, dias) {
+        const d = new Date();
+        d.setTime(d.getTime() + (dias * 24 * 60 * 60 * 1000));
+        document.cookie = nome + '=' + valor + ';expires=' + d.toUTCString() + ';path=/';
+    }
+    
+    function getCookie(nome) {
+        const nomeCookie = nome + '=';
+        const cookies = document.cookie.split(';');
+        for (let c of cookies) {
+            c = c.trim();
+            if (c.indexOf(nomeCookie) === 0) return c.substring(nomeCookie.length);
+        }
+        return '';
+    }
+    
+    function jaVerificado() {
+        if (getCookie(COOKIE_NOME) === 'true') return true;
+        if (localStorage.getItem(COOKIE_NOME) === 'true') return true;
+        return false;
+    }
+    
+    function mostrarPopup() {
+        if (jaVerificado()) return;
+        
+        console.log('🔞 Verificando idade...');
+        
+        // ============================================
+        // 1. REMOVER OVERLAY EXISTENTE
+        // ============================================
+        const overlayExistente = document.getElementById('idadeOverlay');
+        if (overlayExistente) {
+            overlayExistente.remove();
+        }
+        
+        // ============================================
+        // 2. CRIAR OVERLAY COM Z-INDEX MÁXIMO
+        // ============================================
+        const overlay = document.createElement('div');
+        overlay.id = 'idadeOverlay';
+        overlay.className = 'idade-overlay';
+        
+        // FORÇAR Z-INDEX DIRETAMENTE NO ELEMENTO (mais forte que CSS)
+        overlay.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            background: #d4a017 !important;
+            background: linear-gradient(145deg, #f9d976, #f39c12, #d4a017, #b7950b) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 2147483647 !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        `;
+        
+        // ============================================
+        // 3. CRIAR MODAL
+        // ============================================
+        const modal = document.createElement('div');
+        modal.className = 'idade-modal';
+        modal.style.cssText = `
+            background: #ffffff !important;
+            border-radius: 24px !important;
+            padding: 45px 40px 40px !important;
+            max-width: 460px !important;
+            width: 100% !important;
+            text-align: center !important;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.2), 0 0 0 3px #ffd700, 0 0 40px rgba(255,215,0,0.2) !important;
+            position: relative !important;
+            z-index: 2147483647 !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+        `;
+        
+           modal.innerHTML = `
+          <!-- CÍRCULO 18+ PROFISSIONAL -->
+          <div class="idade-18-wrapper">
+              <div class="idade-18-circle">
+                  <span class="idade-18-text">18+</span>
+                  <span class="idade-18-bar">/</span>
+                  <span class="idade-18-sub">anos</span>
+              </div>
+          </div>
+          
+          <div class="idade-badge">✨ Verificação Ouro</div>
+            
+            <h2 class="idade-title">Você tem <span>18 anos</span> ou mais?</h2>
+            
+            <div class="idade-divider">
+                <span class="idade-divider-line"></span>
+                <span class="idade-divider-icon">✦</span>
+                <span class="idade-divider-line"></span>
+            </div>
+            
+            <p class="idade-subtitle">
+                Para acessar nossa <strong>loja de bebidas</strong> e realizar compras,
+                é necessário confirmar que você é maior de idade.
+            </p>
+            
+            <button class="idade-btn-sim" id="idadeBtnSim">
+                ✅ Sim, tenho 18 anos ou mais
+            </button>
+            
+            <button class="idade-btn-nao" id="idadeBtnNao">
+                ✕ Não, sou menor de idade
+            </button>
+            
+            <div class="idade-footer">
+                <span class="lock-icon">🔒</span>
+                <span>Ambiente seguro</span>
+                <span class="dot"></span>
+                <span>Maiores de 18 anos</span>
+            </div>
+        `;
+        
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        document.body.style.overflow = 'hidden';
+        
+        // ============================================
+        // 4. ADICIONAR ANIMAÇÕES
+        // ============================================
+        if (!document.getElementById('idadeStyleAnimations')) {
+            const style = document.createElement('style');
+            style.id = 'idadeStyleAnimations';
+            style.textContent = `
+                @keyframes idadePulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                }
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // ============================================
+        // 5. GARANTIR VISIBILIDADE
+        // ============================================
+        setTimeout(() => {
+            overlay.style.display = 'flex';
+            overlay.style.visibility = 'visible';
+            overlay.style.opacity = '1';
+        }, 50);
+        
+        // ============================================
+        // 6. BOTÃO SIM
+        // ============================================
+        document.getElementById('idadeBtnSim').addEventListener('click', function() {
+            console.log('✅ Idade confirmada!');
+            
+            setCookie(COOKIE_NOME, 'true', DIAS_EXPIRACAO);
+            localStorage.setItem(COOKIE_NOME, 'true');
+            
+            const el = document.getElementById('idadeOverlay');
+            if (el) {
+                el.style.transition = 'opacity 0.4s, transform 0.4s';
+                el.style.opacity = '0';
+                el.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    el.remove();
+                    document.body.style.overflow = '';
+                }, 400);
+            }
+        });
+        
+        // ============================================
+        // 7. BOTÃO NÃO
+        // ============================================
+        document.getElementById('idadeBtnNao').addEventListener('click', function() {
+            console.log('🚫 Menor de idade - bloqueando acesso');
+            
+            const el = document.getElementById('idadeOverlay');
+            if (el) {
+                el.className = 'idade-bloqueado';
+                el.style.cssText = `
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    min-height: 100vh !important;
+                    background: rgba(0,0,0,0.92) !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    z-index: 2147483647 !important;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                    padding: 20px !important;
+                    box-sizing: border-box !important;
+                `;
+                
+                el.innerHTML = `
+                    <div class="idade-bloqueado-content">
+                        <span class="idade-bloqueado-icon">🚫</span>
+                        <h2 class="idade-bloqueado-title">Acesso Negado</h2>
+                        <p class="idade-bloqueado-text">
+                            Este site é destinado exclusivamente para maiores de 18 anos.
+                        </p>
+                        <div class="idade-spinner"></div>
+                        <p class="idade-bloqueado-redirect">Redirecionando...</p>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    window.location.href = 'https://www.google.com';
+                }, 3000);
+            }
+        });
+    }
+    
+    // ============================================
+    // 8. INICIAR
+    // ============================================
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(mostrarPopup, 600));
+    } else {
+        setTimeout(mostrarPopup, 600);
+    }
+    
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            setTimeout(mostrarPopup, 600);
+        }
+    });
+    
+    console.log('🔞 Sistema de verificação de idade carregado!');
+})();
+/*-------------------------------------------------------------------------------------*/
 
 </script>
 
+
+ 
 <!-------------------------------------------------------------------------------------->
 <!-- BOTÃO VOLTAR AO TOPO - VERSÃO DEFINITIVA -->
 <button id="btnVoltarTopo" onclick="voltarAoTopo()" style="
