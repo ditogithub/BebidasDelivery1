@@ -1,19 +1,18 @@
 # ============================================
-# CONFIGURAÇÃO DO NETLIFY - ECONOMIA DE CRÉDITOS
+# NETLIFY - ECONOMIA DE CRÉDITOS (SEM PLUGIN)
 # ============================================
 
 [build]
-  # Seu site é HTML puro, não precisa de comando de build
   publish = "."
-
-  # 🔥 IGNORAR TODOS OS BUILDS (economiza créditos)
-  # ignore = "exit 0"
+  
+  # 🔥🔥🔥 CANCELA TODOS OS BUILDS NA NUVEM
+  ignore = "exit 0"
 
 # ============================================
-# REDIRECIONAMENTOS (opcional)
+# REDIRECIONAMENTOS
 # ============================================
 
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
