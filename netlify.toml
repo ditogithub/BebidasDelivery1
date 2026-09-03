@@ -1,0 +1,19 @@
+# ============================================
+# CONFIGURAÇÃO DO NETLIFY - ECONOMIA DE CRÉDITOS
+# ============================================
+
+[build]
+  # Seu site é HTML puro, não precisa de comando de build
+  publish = "."
+
+  # 🔥 IGNORAR TODOS OS BUILDS (economiza créditos)
+  # ignore = "exit 0"
+
+# ============================================
+# REDIRECIONAMENTOS (opcional)
+# ============================================
+
+# [[redirects]]
+#   from = "/*"
+#   to = "/index.html"
+#   status = 200
