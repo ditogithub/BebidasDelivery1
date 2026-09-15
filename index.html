@@ -14915,21 +14915,62 @@ function resetBoasVindas() {
 
 // ============================================
 // ============================================
-// 🔥 LOGIN COM GOOGLE - VERSÃO CORRIGIDA
+// 🔥 LOGIN COM GOOGLE - VERSÃO MOBILE CORRIGIDA
 // ============================================
 
 async function loginWithGoogle() {
     try {
         console.log('🔐 Iniciando login com Google...');
         
-        // Verificar se é celular
+        // Detectar celular
         var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         console.log('📱 Dispositivo:', isMobile ? 'Celular' : 'Computador');
         
+        // ============================================
+        // 📱 CELULAR: USAR REDIRECT (MAIS CONFIÁVEL)
+        // ============================================
+        if (isMobile) {
+            console.log('📱 Usando REDIRECT no celular...');
+            
+            // Mostrar loading antes de redirecionar
+            var loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loadingGoogleLogin';
+            loadingDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #2c3e50;
+                color: white;
+                padding: 20px 30px;
+                border-radius: 10px;
+                z-index: 1000000;
+                font-weight: bold;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                text-align: center;
+                min-width: 200px;
+            `;
+            loadingDiv.innerHTML = `
+                <div style="font-size: 24px; margin-bottom: 10px;">🔄</div>
+                <div>Redirecionando para o Google...</div>
+                <div style="font-size: 12px; opacity: 0.7; margin-top: 5px;">Aguarde</div>
+            `;
+            document.body.appendChild(loadingDiv);
+            
+            // 🔥 REDIRECT (não depende de popup nem gesto do usuário)
+            await auth.signInWithRedirect(googleProvider);
+            return; // A página vai navegar, o resultado é tratado no getRedirectResult
+        }
+        
+        // ============================================
+        // 💻 COMPUTADOR: USAR POPUP (FUNCIONA BEM)
+        // ============================================
+        console.log('💻 Usando POPUP no computador...');
+        
         // Mostrar loading
-        var loadingDiv = document.createElement('div');
-        loadingDiv.id = 'loadingGoogleLogin';
-        loadingDiv.style.cssText = `
+        var loadingDiv2 = document.createElement('div');
+        loadingDiv2.id = 'loadingGoogleLogin';
+        loadingDiv2.style.cssText = `
             position: fixed;
             top: 50%;
             left: 50%;
@@ -14944,35 +14985,29 @@ async function loginWithGoogle() {
             text-align: center;
             min-width: 200px;
         `;
-        loadingDiv.innerHTML = `
+        loadingDiv2.innerHTML = `
             <div style="font-size: 24px; margin-bottom: 10px;">🔄</div>
             <div>Conectando com Google...</div>
             <div style="font-size: 12px; opacity: 0.7; margin-top: 5px;">Aguarde</div>
         `;
-        document.body.appendChild(loadingDiv);
+        document.body.appendChild(loadingDiv2);
         
-        // 🔥 CORREÇÃO: DESCONECTAR ANÔNIMO PRIMEIRO
-        if (auth.currentUser) {
-            console.log('👤 Usuário atual:', auth.currentUser.isAnonymous ? 'ANÔNIMO' : 'REAL');
-            if (auth.currentUser.isAnonymous) {
-                console.log('🔄 Desconectando usuário anônimo...');
-                await auth.signOut();
-                console.log('✅ Usuário anônimo desconectado');
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
+        // 🔥 DESCONECTAR ANÔNIMO PRIMEIRO (só no PC, pois no celular o redirect já lida com isso)
+        if (auth.currentUser && auth.currentUser.isAnonymous) {
+            console.log('🔄 Desconectando anônimo...');
+            await auth.signOut();
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         
-        // 🔥 TENTAR LOGIN
-        console.log('📱 Abrindo popup do Google...');
+        // POPUP
         var result = await auth.signInWithPopup(googleProvider);
         var user = result.user;
         
         console.log('✅ Login com Google bem-sucedido!');
         console.log('📧 Email:', user.email);
-        console.log('🆔 UID:', user.uid);
         
         // Remover loading
-        if (loadingDiv) loadingDiv.remove();
+        if (loadingDiv2) loadingDiv2.remove();
         
         // Fechar modais
         document.querySelectorAll('.modal-backdrop, .modal, .login-modal, #loginRequiredModal').forEach(function(el) {
@@ -15010,117 +15045,25 @@ async function loginWithGoogle() {
         var loading = document.getElementById('loadingGoogleLogin');
         if (loading) loading.remove();
         
-        // 🔥 TRATAR POPUP BLOQUEADO
+        // 🔥 TRATAR ERROS
         var errorMessage = '';
         
         if (error.code === 'auth/popup-blocked') {
-            // Verificar se é celular
-            var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            
-            if (isMobile) {
-                errorMessage = '📱 POPUP BLOQUEADO!\n\n' +
-                              'Se tiver dificuldade para logar vá no Chrome:\n\n' +
-                              '1️⃣ Vá até os 3 pontinhos (⋮) no canto superior direito\n' +
-                              '2️⃣ Vá até "Configurações" (Settings)\n' +
-                              '3️⃣ Vá até "Configurações do site" (Site settings)\n' +
-                              '4️⃣ Vá até "Pop-ups e redirecionamentos" (Pop-ups and redirects)\n' +
-                              '5️⃣ Ative "Permitir pop-ups" (Allow pop-ups)';
-            } else {
-                errorMessage = '⚠️ POPUP BLOQUEADO!\n\n' +
-                              'Clique no ícone de bloqueio na barra de endereço\n' +
-                              'e permita popups para este site.';
-            }
+            errorMessage = '⚠️ POPUP BLOQUEADO!\n\n' +
+                          'Permita popups para este site nas configurações do navegador.';
         } else if (error.code === 'auth/popup-closed-by-user') {
             errorMessage = '❌ Login cancelado. Você fechou a janela do Google.';
         } else if (error.code === 'auth/cancelled-popup-request') {
             errorMessage = '❌ Login cancelado. Tente novamente.';
         } else if (error.code === 'auth/network-request-failed') {
-            errorMessage = '📶 Erro de conexão. Verifique sua internet e tente novamente.';
+            errorMessage = '📶 Erro de conexão. Verifique sua internet.';
         } else {
-            errorMessage = '❌ Erro: ' + (error.message || 'Erro desconhecido');
+            errorMessage = '❌ Erro: ' + (error.code || error.message || 'Erro desconhecido');
         }
         
         alert(errorMessage);
     }
 }
-
-// ============================================
-// 🔥 DETECTOR INTELIGENTE DE POPUP (CORRIGIDO)
-// ============================================
-
-// Controle de estado
-var loginEmAndamento = false;
-var popupJaAvisado = false;
-
-// Sobrescrever a função loginWithGoogle para controlar o estado
-var loginOriginal = window.loginWithGoogle;
-
-window.loginWithGoogle = async function() {
-    // Marcar que o login está em andamento
-    loginEmAndamento = true;
-    popupJaAvisado = false;
-    
-    console.log('🔐 Login iniciado - detector pausado');
-    
-    try {
-        // Chamar a função original
-        await loginOriginal.apply(this, arguments);
-    } catch (error) {
-        console.error('❌ Erro:', error);
-    } finally {
-        // Login terminou
-        loginEmAndamento = false;
-        console.log('🔐 Login finalizado - detector reativado');
-    }
-};
-
-// Detector APENAS quando NÃO estiver logando
-document.addEventListener('click', function(e) {
-    // Verificar se clicou em botão de login
-    var isLoginButton = e.target.closest('#btnUserLogin') || 
-                        e.target.closest('[onclick*="loginWithGoogle"]');
-    
-    if (!isLoginButton) return;
-    
-    // Verificar se é celular
-    var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (!isMobile) return;
-    
-    // 🔥 SÓ MOSTRAR SE O LOGIN NÃO ESTIVER EM ANDAMENTO
-    setTimeout(function() {
-        // Se ainda estiver logando, não mostrar nada
-        if (loginEmAndamento) {
-            console.log('✅ Login em andamento - detector não interfere');
-            return;
-        }
-        
-        // Se já avisou, não mostrar de novo
-        if (popupJaAvisado) return;
-        
-        // Verificar se o usuário está logado agora
-        if (auth.currentUser && !auth.currentUser.isAnonymous) {
-            console.log('✅ Usuário logado - detector não interfere');
-            return;
-        }
-        
-        // Se chegou aqui, o popup provavelmente foi bloqueado
-        popupJaAvisado = true;
-        console.log('⚠️ Popup provavelmente bloqueado');
-        
-        alert(
-            '📱 SE O LOGIN NÃO ABRIR:\n\n' +
-            'Vá no Chrome e faça:\n\n' +
-            '1️⃣ Vá até os 3 pontinhos (⋮) no canto superior direito\n' +
-            '2️⃣ Vá até "Configurações" (Settings)\n' +
-            '3️⃣ Vá até "Configurações do site" (Site settings)\n' +
-            '4️⃣ Vá até "Pop-ups e redirecionamentos" (Pop-ups and redirects)\n' +
-            '5️⃣ Ative "Permitir pop-ups" (Allow pop-ups)\n\n' +
-            '⚠️ Só faça isso se o login NÃO abrir!'
-        );
-    }, 5000); // 5 segundos para dar tempo do popup abrir
-});
-
-console.log('✅ Detector inteligente ativado!');
 //--------------------------------------------------------------------------
 
 // ============================================
