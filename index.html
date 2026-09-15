@@ -13,6 +13,108 @@
 
 <!-- DELIVERY BEBIDAS 1 - após Firebase -->
 <script> 
+//--------------------------------------------------------------------
+// ============================================
+// 🔥 LOG VISUAL NA TELA (PARA DEBUG NO CELULAR)
+// ============================================
+
+(function() {
+    'use strict';
+    
+    // Criar painel de log
+    var logPanel = document.createElement('div');
+    logPanel.id = 'logPanel';
+    logPanel.style.cssText = `
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        max-height: 200px !important;
+        background: rgba(0,0,0,0.9) !important;
+        color: #0f0 !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+        padding: 5px !important;
+        z-index: 99999999 !important;
+        overflow-y: auto !important;
+        display: none !important;
+        border-top: 2px solid #0f0 !important;
+    `;
+    document.body.appendChild(logPanel);
+    
+    // Função para logar na tela
+    window.logTela = function(msg, cor) {
+        cor = cor || '#0f0';
+        var panel = document.getElementById('logPanel');
+        if (!panel) return;
+        
+        panel.style.display = 'block';
+        panel.innerHTML += '<div style="color:' + cor + '">' + msg + '</div>';
+        panel.scrollTop = panel.scrollHeight;
+    };
+    
+    // Sobrescrever console.log
+    var originalLog = console.log;
+    console.log = function() {
+        var msg = Array.from(arguments).join(' ');
+        originalLog.apply(console, arguments);
+        window.logTela(msg, '#0f0');
+    };
+    
+    // Sobrescrever console.error
+    var originalError = console.error;
+    console.error = function() {
+        var msg = Array.from(arguments).join(' ');
+        originalError.apply(console, arguments);
+        window.logTela('❌ ' + msg, '#f00');
+    };
+    
+    // Sobrescrever console.warn
+    var originalWarn = console.warn;
+    console.warn = function() {
+        var msg = Array.from(arguments).join(' ');
+        originalWarn.apply(console, arguments);
+        window.logTela('⚠️ ' + msg, '#ff0');
+    };
+    
+    // Criar botão para mostrar/esconder log
+    setTimeout(function() {
+        var btnLog = document.createElement('button');
+        btnLog.textContent = '📋';
+        btnLog.style.cssText = `
+            position: fixed !important;
+            bottom: 120px !important;
+            right: 10px !important;
+            background: #3498db !important;
+            color: white !important;
+            border: none !important;
+            padding: 10px !important;
+            border-radius: 50% !important;
+            z-index: 99999999 !important;
+            font-weight: bold !important;
+            font-size: 20px !important;
+            width: 50px !important;
+            height: 50px !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+        `;
+        btnLog.onclick = function() {
+            var panel = document.getElementById('logPanel');
+            if (panel) {
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            }
+        };
+        document.body.appendChild(btnLog);
+    }, 2000);
+    
+    // Log inicial
+    window.logTela('✅ Sistema de log ativado!', '#0f0');
+    window.logTela('📱 Aguardando login...', '#0ff');
+    
+})();
+//--------------------------------------------------------------------
+
+
 // PROTEÇÃO DELIVERY BEBIDAS 1 - VERSÃO CORRIGIDA
 // Chave: bebida1_cart (sugestão) ou bebida_cart
 // ============================================
@@ -11634,11 +11736,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ============================================
     try {
       console.log('🔍 Verificando resultado do redirect...');
+      if (window.logTela) window.logTela('🔍 Verificando redirect result...', '#0ff');
+      
       const redirectResult = await auth.getRedirectResult();
       
       if (redirectResult && redirectResult.user) {
         console.log('✅ Redirect result encontrado!');
         console.log('📧 Email:', redirectResult.user.email);
+        if (window.logTela) window.logTela('✅ REDIRECT OK! Email: ' + redirectResult.user.email, '#0f0');
         
         // Salvar dados do usuário
         window.currentUser = {
@@ -11673,9 +11778,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 500);
       } else {
         console.log('ℹ️ Nenhum redirect result (login normal)');
+        if (window.logTela) window.logTela('ℹ️ Nenhum redirect result', '#ff0');
       }
     } catch (e) {
       console.error('❌ Erro no redirect result:', e);
+      if (window.logTela) window.logTela('❌ ERRO redirect result: ' + (e.code || e.message), '#f00');
     }
     // ============================================
     // FIM DA ADIÇÃO DO REDIRECT RESULT
@@ -11753,9 +11860,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     console.log('✅ Sistema inicializado com sucesso!');
+    if (window.logTela) window.logTela('✅ Sistema inicializado!', '#0f0');
     
   } catch (error) {
     console.error(' Erro na inicialização:', error);
+    if (window.logTela) window.logTela('❌ ERRO init: ' + error.message, '#f00');
     alert('Erro ao carregar o sistema. Recarregue a página.');
   }
 });
@@ -14964,21 +15073,24 @@ function resetBoasVindas() {
 // 🔥 LOGIN COM GOOGLE - VERSÃO MOBILE CORRIGIDA
 // ============================================
 
+// ============================================
+// 🔥 LOGIN COM GOOGLE - VERSÃO COM LOG
+// ============================================
+
 async function loginWithGoogle() {
     try {
-        console.log('🔐 Iniciando login com Google...');
+        if (window.logTela) window.logTela('🔐 Iniciando login...', '#0ff');
         
-        // Detectar celular
         var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        console.log('📱 Dispositivo:', isMobile ? 'Celular' : 'Computador');
+        if (window.logTela) window.logTela('📱 Dispositivo: ' + (isMobile ? 'CELULAR' : 'PC'), '#0ff');
         
         // ============================================
-        // 📱 CELULAR: USAR REDIRECT (MAIS CONFIÁVEL)
+        // 📱 CELULAR: USAR REDIRECT
         // ============================================
         if (isMobile) {
-            console.log('📱 Usando REDIRECT no celular...');
+            if (window.logTela) window.logTela('📱 Usando REDIRECT...', '#ff0');
             
-            // Mostrar loading antes de redirecionar
+            // Mostrar loading
             var loadingDiv = document.createElement('div');
             loadingDiv.id = 'loadingGoogleLogin';
             loadingDiv.style.cssText = `
@@ -15003,17 +15115,24 @@ async function loginWithGoogle() {
             `;
             document.body.appendChild(loadingDiv);
             
-            // 🔥 REDIRECT (não depende de popup nem gesto do usuário)
-            await auth.signInWithRedirect(googleProvider);
-            return; // A página vai navegar, o resultado é tratado no getRedirectResult
+            if (window.logTela) window.logTela('🔄 Chamando signInWithRedirect...', '#ff0');
+            
+            try {
+                await auth.signInWithRedirect(googleProvider);
+                if (window.logTela) window.logTela('✅ Redirect chamado com sucesso!', '#0f0');
+            } catch (redirectError) {
+                if (window.logTela) window.logTela('❌ ERRO no redirect: ' + redirectError.code + ' - ' + redirectError.message, '#f00');
+                throw redirectError;
+            }
+            
+            return;
         }
         
         // ============================================
-        // 💻 COMPUTADOR: USAR POPUP (FUNCIONA BEM)
+        // 💻 COMPUTADOR: USAR POPUP
         // ============================================
-        console.log('💻 Usando POPUP no computador...');
+        if (window.logTela) window.logTela('💻 Usando POPUP...', '#ff0');
         
-        // Mostrar loading
         var loadingDiv2 = document.createElement('div');
         loadingDiv2.id = 'loadingGoogleLogin';
         loadingDiv2.style.cssText = `
@@ -15034,33 +15153,26 @@ async function loginWithGoogle() {
         loadingDiv2.innerHTML = `
             <div style="font-size: 24px; margin-bottom: 10px;">🔄</div>
             <div>Conectando com Google...</div>
-            <div style="font-size: 12px; opacity: 0.7; margin-top: 5px;">Aguarde</div>
         `;
         document.body.appendChild(loadingDiv2);
         
-        // 🔥 DESCONECTAR ANÔNIMO PRIMEIRO (só no PC, pois no celular o redirect já lida com isso)
         if (auth.currentUser && auth.currentUser.isAnonymous) {
-            console.log('🔄 Desconectando anônimo...');
+            if (window.logTela) window.logTela('🔄 Desconectando anônimo...', '#ff0');
             await auth.signOut();
             await new Promise(resolve => setTimeout(resolve, 500));
         }
         
-        // POPUP
         var result = await auth.signInWithPopup(googleProvider);
         var user = result.user;
         
-        console.log('✅ Login com Google bem-sucedido!');
-        console.log('📧 Email:', user.email);
+        if (window.logTela) window.logTela('✅ Login OK! Email: ' + user.email, '#0f0');
         
-        // Remover loading
         if (loadingDiv2) loadingDiv2.remove();
         
-        // Fechar modais
         document.querySelectorAll('.modal-backdrop, .modal, .login-modal, #loginRequiredModal').forEach(function(el) {
             if (el) el.remove();
         });
         
-        // Salvar dados do usuário
         window.currentUser = {
             id: user.uid,
             name: user.displayName || user.email.split('@')[0],
@@ -15073,38 +15185,33 @@ async function loginWithGoogle() {
         
         localStorage.setItem('delivery_bebidas_user', JSON.stringify(window.currentUser));
         
-        // Atualizar UI
         if (typeof updateUserUI === 'function') {
             updateUserUI();
         }
         
         alert('✅ Login realizado com sucesso!\n\nEmail: ' + user.email);
         
-        // Recarregar
         setTimeout(function() {
             location.reload();
         }, 500);
         
     } catch (error) {
-        console.error('❌ Erro no login com Google:', error);
+        if (window.logTela) window.logTela('❌ ERRO GERAL: ' + (error.code || error.message), '#f00');
+        console.error('❌ Erro no login:', error);
         
         var loading = document.getElementById('loadingGoogleLogin');
         if (loading) loading.remove();
         
-        // 🔥 TRATAR ERROS
         var errorMessage = '';
         
         if (error.code === 'auth/popup-blocked') {
-            errorMessage = '⚠️ POPUP BLOQUEADO!\n\n' +
-                          'Permita popups para este site nas configurações do navegador.';
+            errorMessage = '⚠️ POPUP BLOQUEADO!\n\nPermita popups para este site.';
         } else if (error.code === 'auth/popup-closed-by-user') {
-            errorMessage = '❌ Login cancelado. Você fechou a janela do Google.';
-        } else if (error.code === 'auth/cancelled-popup-request') {
-            errorMessage = '❌ Login cancelado. Tente novamente.';
+            errorMessage = '❌ Login cancelado.';
         } else if (error.code === 'auth/network-request-failed') {
-            errorMessage = '📶 Erro de conexão. Verifique sua internet.';
+            errorMessage = '📶 Erro de conexão.';
         } else {
-            errorMessage = '❌ Erro: ' + (error.code || error.message || 'Erro desconhecido');
+            errorMessage = '❌ Erro: ' + (error.code || error.message || 'Desconhecido');
         }
         
         alert(errorMessage);
