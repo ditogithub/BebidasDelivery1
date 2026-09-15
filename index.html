@@ -11625,26 +11625,78 @@ document.getElementById('btnUseLocation')?.addEventListener('click', () => {
 // =========================
 
 // Modificar a inicialização para usar cache
-  document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
   try {
     console.log(' Sistema inicializando (versão otimizada)...');
+    
+    // ============================================
+    // 🔥 CAPTURAR RESULTADO DO REDIRECT (MOBILE) - ADICIONADO
+    // ============================================
+    try {
+      console.log('🔍 Verificando resultado do redirect...');
+      const redirectResult = await auth.getRedirectResult();
+      
+      if (redirectResult && redirectResult.user) {
+        console.log('✅ Redirect result encontrado!');
+        console.log('📧 Email:', redirectResult.user.email);
+        
+        // Salvar dados do usuário
+        window.currentUser = {
+          id: redirectResult.user.uid,
+          name: redirectResult.user.displayName || redirectResult.user.email.split('@')[0],
+          email: redirectResult.user.email,
+          phone: redirectResult.user.phoneNumber || '',
+          photoURL: redirectResult.user.photoURL,
+          provider: 'google',
+          firebaseUser: redirectResult.user
+        };
+        
+        localStorage.setItem('delivery_bebidas_user', JSON.stringify(window.currentUser));
+        
+        // Remover loading se existir
+        var loading = document.getElementById('loadingGoogleLogin');
+        if (loading) loading.remove();
+        
+        // Fechar modais
+        document.querySelectorAll('.modal-backdrop, .modal, .login-modal, #loginRequiredModal').forEach(function(el) {
+          if (el) el.remove();
+        });
+        
+        // Atualizar UI
+        if (typeof updateUserUI === 'function') {
+          updateUserUI();
+        }
+        
+        // Mensagem de sucesso
+        setTimeout(function() {
+          alert('✅ Login realizado com sucesso!\n\nEmail: ' + redirectResult.user.email);
+        }, 500);
+      } else {
+        console.log('ℹ️ Nenhum redirect result (login normal)');
+      }
+    } catch (e) {
+      console.error('❌ Erro no redirect result:', e);
+    }
+    // ============================================
+    // FIM DA ADIÇÃO DO REDIRECT RESULT
+    // ============================================
     
     // PASSO 4: Inicializar exibição do usuário (antes de tudo)
     atualizarExibicaoUsuario();
     
     // 1. PRIMEIRO: Autenticar
-      await auth.signInAnonymously().catch(() => {
-        console.log(' Autenticação em segundo plano');
-      });
+    await auth.signInAnonymously().catch(() => {
+      console.log(' Autenticação em segundo plano');
+    });
 
-      // 2. CARREGAR TAXA DE ENTREGA PRIMEIRO
-      await carregarTaxaEntrega();
+    // 2. CARREGAR TAXA DE ENTREGA PRIMEIRO
+    await carregarTaxaEntrega();
 
-      // 2.5 CARREGAR TAXAS POR BAIRRO
-      await carregarTaxasPorBairro();
+    // 2.5 CARREGAR TAXAS POR BAIRRO
+    await carregarTaxasPorBairro();
 
-      // 3. DEPOIS carregar PIX (que depende da taxa)
-      await inicializarPix();
+    // 3. DEPOIS carregar PIX (que depende da taxa)
+    await inicializarPix();
     
     // 2. Carregar carrinho do localStorage APÓS autenticação
     const savedCart = localStorage.getItem('cart'); // Isso será redirecionado para bebida1_cart
@@ -11707,12 +11759,6 @@ document.getElementById('btnUseLocation')?.addEventListener('click', () => {
     alert('Erro ao carregar o sistema. Recarregue a página.');
   }
 });
-// FERRAMENTA DE EMERGÊNCIA AVANÇADA - VERSÃO CORRIGIDA (CAMPOS DINÂMICOS)
-// =========================
-// =========================
-// REPOSIÇÃO RÁPIDA DE ESTOQUE - VERSÃO COMPLETA COM FOTOS
-// =========================
-
 // ============================================
 // REPOSIÇÃO DE ESTOQUE - COM BUSCA POR NOME
 // ============================================
