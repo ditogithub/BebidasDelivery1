@@ -14915,7 +14915,7 @@ function resetBoasVindas() {
 
 // ============================================
 // ============================================
-// 🔥 LOGIN COM GOOGLE - VERSÃO COM DETECÇÃO DE POPUP
+// 🔥 LOGIN COM GOOGLE - VERSÃO CORRIGIDA
 // ============================================
 
 async function loginWithGoogle() {
@@ -15010,7 +15010,7 @@ async function loginWithGoogle() {
         var loading = document.getElementById('loadingGoogleLogin');
         if (loading) loading.remove();
         
-        // 🔥 TRATAR POPUP BLOQUEADO - MENSAGEM CORRIGIDA
+        // 🔥 TRATAR POPUP BLOQUEADO
         var errorMessage = '';
         
         if (error.code === 'auth/popup-blocked') {
@@ -15019,13 +15019,12 @@ async function loginWithGoogle() {
             
             if (isMobile) {
                 errorMessage = '📱 POPUP BLOQUEADO!\n\n' +
-                              'Se tiver dificuldade para logar va no Chrome:\n\n' +
+                              'Se tiver dificuldade para logar vá no Chrome:\n\n' +
                               '1️⃣ Vá até os 3 pontinhos (⋮) no canto superior direito\n' +
                               '2️⃣ Vá até "Configurações" (Settings)\n' +
                               '3️⃣ Vá até "Configurações do site" (Site settings)\n' +
                               '4️⃣ Vá até "Pop-ups e redirecionamentos" (Pop-ups and redirects)\n' +
                               '5️⃣ Ative "Permitir pop-ups" (Allow pop-ups)';
-                            
             } else {
                 errorMessage = '⚠️ POPUP BLOQUEADO!\n\n' +
                               'Clique no ícone de bloqueio na barra de endereço\n' +
@@ -15044,47 +15043,84 @@ async function loginWithGoogle() {
         alert(errorMessage);
     }
 }
-//--------------------------------------------------------------------------
-  // ============================================
-// 🔥 DETECTOR AUTOMÁTICO DE POPUP BLOQUEADO
+
+// ============================================
+// 🔥 DETECTOR INTELIGENTE DE POPUP (CORRIGIDO)
 // ============================================
 
-// Verificar se o popup foi bloqueado
-var popupBlocked = false;
+// Controle de estado
+var loginEmAndamento = false;
+var popupJaAvisado = false;
 
-// Detectar quando o usuário tenta interagir
-document.addEventListener('click', function(e) {
-    // Se clicou em algum botão de login
-    if (e.target.closest('#btnUserLogin') || 
-        e.target.closest('[onclick*="loginWithGoogle"]')) {
-        
-        // Verificar se é celular
-        var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
-        if (isMobile) {
-            // Pequeno delay para ver se o popup abriu
-            setTimeout(function() {
-                // Se o popup não abriu, mostrar ajuda
-                if (!document.querySelector('[role="dialog"]')) {
-                    if (!popupBlocked) {
-                        popupBlocked = true;
-                        alert(
-                            '📱 PERMITA POPUPS!\n\n' +
-                            'Se tiver dificuldade para logar va no Chrome:\n\n' +
-                            '1️⃣ Vá até os 3 pontinhos (⋮) no canto superior direito\n' +
-                            '2️⃣ Vá até "Configurações" (Settings)\n' +
-                            '3️⃣ Vá até "Configurações do site" (Site settings)\n' +
-                            '4️⃣ Vá até "Pop-ups e redirecionamentos" (Pop-ups and redirects)\n' +
-                            '5️⃣ Ative "Permitir pop-ups" (Allow pop-ups)'
-                        );
-                    }
-                }
-            }, 3000);
-        }
+// Sobrescrever a função loginWithGoogle para controlar o estado
+var loginOriginal = window.loginWithGoogle;
+
+window.loginWithGoogle = async function() {
+    // Marcar que o login está em andamento
+    loginEmAndamento = true;
+    popupJaAvisado = false;
+    
+    console.log('🔐 Login iniciado - detector pausado');
+    
+    try {
+        // Chamar a função original
+        await loginOriginal.apply(this, arguments);
+    } catch (error) {
+        console.error('❌ Erro:', error);
+    } finally {
+        // Login terminou
+        loginEmAndamento = false;
+        console.log('🔐 Login finalizado - detector reativado');
     }
+};
+
+// Detector APENAS quando NÃO estiver logando
+document.addEventListener('click', function(e) {
+    // Verificar se clicou em botão de login
+    var isLoginButton = e.target.closest('#btnUserLogin') || 
+                        e.target.closest('[onclick*="loginWithGoogle"]');
+    
+    if (!isLoginButton) return;
+    
+    // Verificar se é celular
+    var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (!isMobile) return;
+    
+    // 🔥 SÓ MOSTRAR SE O LOGIN NÃO ESTIVER EM ANDAMENTO
+    setTimeout(function() {
+        // Se ainda estiver logando, não mostrar nada
+        if (loginEmAndamento) {
+            console.log('✅ Login em andamento - detector não interfere');
+            return;
+        }
+        
+        // Se já avisou, não mostrar de novo
+        if (popupJaAvisado) return;
+        
+        // Verificar se o usuário está logado agora
+        if (auth.currentUser && !auth.currentUser.isAnonymous) {
+            console.log('✅ Usuário logado - detector não interfere');
+            return;
+        }
+        
+        // Se chegou aqui, o popup provavelmente foi bloqueado
+        popupJaAvisado = true;
+        console.log('⚠️ Popup provavelmente bloqueado');
+        
+        alert(
+            '📱 SE O LOGIN NÃO ABRIR:\n\n' +
+            'Vá no Chrome e faça:\n\n' +
+            '1️⃣ Vá até os 3 pontinhos (⋮) no canto superior direito\n' +
+            '2️⃣ Vá até "Configurações" (Settings)\n' +
+            '3️⃣ Vá até "Configurações do site" (Site settings)\n' +
+            '4️⃣ Vá até "Pop-ups e redirecionamentos" (Pop-ups and redirects)\n' +
+            '5️⃣ Ative "Permitir pop-ups" (Allow pop-ups)\n\n' +
+            '⚠️ Só faça isso se o login NÃO abrir!'
+        );
+    }, 5000); // 5 segundos para dar tempo do popup abrir
 });
 
-console.log('✅ Detector automático de popup ativado!');
+console.log('✅ Detector inteligente ativado!');
 //--------------------------------------------------------------------------
 
 // ============================================
