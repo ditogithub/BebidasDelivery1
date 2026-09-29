@@ -11721,6 +11721,7 @@ document.getElementById('btnUseLocation')?.addEventListener('click', () => {
 
 
 //-----------------------------------------------------------------------------------------------
+
 // ========CORRIGIDO===========
 // INICIALIZAÇÃO OTIMIZADA COM LISTENER DE TEMPO REAL
 // =========================
@@ -11744,7 +11745,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('📧 Email:', redirectResult.user.email);
         if (window.logTela) window.logTela('✅ REDIRECT OK! Email: ' + redirectResult.user.email, '#0f0');
         
-        // Salvar dados do usuário
         window.currentUser = {
           id: redirectResult.user.uid,
           name: redirectResult.user.displayName || redirectResult.user.email.split('@')[0],
@@ -11757,21 +11757,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         localStorage.setItem('delivery_bebidas_user', JSON.stringify(window.currentUser));
         
-        // Remover loading se existir
         var loading = document.getElementById('loadingGoogleLogin');
         if (loading) loading.remove();
         
-        // Fechar modais
         document.querySelectorAll('.modal-backdrop, .modal, .login-modal, #loginRequiredModal').forEach(function(el) {
           if (el) el.remove();
         });
         
-        // Atualizar UI
         if (typeof updateUserUI === 'function') {
           updateUserUI();
         }
         
-        // Mensagem de sucesso
         setTimeout(function() {
           alert('✅ Login realizado com sucesso!\n\nEmail: ' + redirectResult.user.email);
         }, 500);
@@ -11783,15 +11779,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('❌ Erro no redirect result:', e);
       if (window.logTela) window.logTela('❌ ERRO redirect result: ' + (e.code || e.message), '#f00');
     }
-    // ============================================
-    // FIM DA ADIÇÃO DO REDIRECT RESULT
-    // ============================================
-    
-    // PASSO 4: Inicializar exibição do usuário (antes de tudo)
-    atualizarExibicaoUsuario();
     
     // ============================================
-    // 🔥 AUTENTICAR ANÔNIMO - SÓ SE NÃO TIVER USUÁRIO
+    // 🔥 AUTENTICAR - SÓ CRIA ANÔNIMO SE NÃO TIVER USUÁRIO
     // ============================================
     if (!auth.currentUser) {
       console.log('👤 Nenhum usuário - criando anônimo...');
@@ -11800,10 +11790,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       await auth.signInAnonymously().catch(() => {
         console.log('⚠️ Anônimo em segundo plano');
       });
+      
+      console.log('✅ Anônimo criado:', auth.currentUser ? auth.currentUser.uid : 'ERRO');
     } else {
       console.log('✅ Usuário já logado:', auth.currentUser.email || 'ANÔNIMO');
       if (window.logTela) window.logTela('✅ Usuário: ' + (auth.currentUser.email || 'ANÔNIMO'), '#0f0');
     }
+    
+    // ============================================
+    // 🔥 PEQUENO DELAY PARA O FIRESTORE ESTABILIZAR
+    // ============================================
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // PASSO 4: Inicializar exibição do usuário
+    atualizarExibicaoUsuario();
 
     // 2. CARREGAR TAXA DE ENTREGA PRIMEIRO
     await carregarTaxaEntrega();
@@ -11825,16 +11825,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         cart = [];
       }
     }
-   //------------ 
+    
     // 3. Adicionar real-time listener para produtos (ATUALIZAÇÃO EM TEMPO REAL)
     db.collection('produtos').onSnapshot((snapshot) => {
       console.log(' Atualização em tempo real de produtos detectada');
       
-      // Invalidar cache quando houver mudanças
       produtosCache = null;
       ultimoCarregamentoCache = null;
       
-      // Recarregar produtos se o catálogo estiver visível
       if (typeof carregarProdutos === 'function' && 
           document.getElementById('catalogCard').style.display !== 'none') {
         setTimeout(() => {
@@ -11855,7 +11853,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateCartCount();
     
     // 7. Carregar produtos (usando versão otimizada)
+    console.log('🔄 Carregando produtos...');
+    if (window.logTela) window.logTela('🔄 Carregando produtos...', '#ff0');
+    
     await carregarProdutosOtimizado();
+    
+    console.log('✅ Produtos carregados!');
+    if (window.logTela) window.logTela('✅ Produtos carregados!', '#0f0');
     
     // 8. Adicionar evento de pesquisa
     document.getElementById('searchInput').addEventListener('input', () => {
@@ -11874,94 +11878,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.error(' Erro na inicialização:', error);
     if (window.logTela) window.logTela('❌ ERRO init: ' + error.message, '#f00');
-    alert('Erro ao carregar o sistema. Recarregue a página.');
-  }
-});
-//----------------------------------------------------------------------------------------------------
-    // ============================================
-    // FIM DA ADIÇÃO DO REDIRECT RESULT
-    // ============================================
     
-    // PASSO 4: Inicializar exibição do usuário (antes de tudo)
-    atualizarExibicaoUsuario();
-    
-    // 1. PRIMEIRO: Autenticar
-    await auth.signInAnonymously().catch(() => {
-      console.log(' Autenticação em segundo plano');
-    });
-
-    // 2. CARREGAR TAXA DE ENTREGA PRIMEIRO
-    await carregarTaxaEntrega();
-
-    // 2.5 CARREGAR TAXAS POR BAIRRO
-    await carregarTaxasPorBairro();
-
-    // 3. DEPOIS carregar PIX (que depende da taxa)
-    await inicializarPix();
-    
-    // 2. Carregar carrinho do localStorage APÓS autenticação
-    const savedCart = localStorage.getItem('cart'); // Isso será redirecionado para bebida1_cart
-    if (savedCart) {
+    // Tentar carregar produtos mesmo com erro
+    if (typeof carregarProdutosOtimizado === 'function') {
       try {
-        cart = JSON.parse(savedCart);
-        console.log('🛒 Carrinho carregado do localStorage:', cart.length, 'itens');
+        await carregarProdutosOtimizado();
       } catch (e) {
-        console.error('❌ Erro ao carregar carrinho:', e);
-        cart = [];
+        console.error('❌ Erro ao carregar produtos:', e);
       }
     }
-   //------------ 
-    // 3. Adicionar real-time listener para produtos (ATUALIZAÇÃO EM TEMPO REAL)
-    db.collection('produtos').onSnapshot((snapshot) => {
-      console.log(' Atualização em tempo real de produtos detectada');
-      
-      // Invalidar cache quando houver mudanças
-      produtosCache = null;
-      ultimoCarregamentoCache = null;
-      
-      // Recarregar produtos se o catálogo estiver visível
-      if (typeof carregarProdutos === 'function' && 
-          document.getElementById('catalogCard').style.display !== 'none') {
-        setTimeout(() => {
-          carregarProdutos();
-        }, 500);
-      }
-    });
-    
-    // 4. Configurar listener do status do carrinho
-    db.collection("config").doc("cart").onSnapshot(() => {
-      atualizarStatusCarrinhoUnificado();
-    });
-    
-    // 5. Carregar status inicial do carrinho
-    await atualizarStatusCarrinhoUnificado();
-    
-    // 6. Atualizar contador do carrinho IMEDIATAMENTE
-    updateCartCount();
-    
-    // 7. Carregar produtos (usando versão otimizada)
-    await carregarProdutosOtimizado();
-    
-    // 8. Adicionar evento de pesquisa
-    document.getElementById('searchInput').addEventListener('input', () => {
-      carregarProdutos();
-    });
-    
-    // 9. Atualizar carrinho visual se houver itens
-    if (cart.length > 0) {
-      console.log(' Renderizando carrinho com', cart.length, 'itens...');
-      renderCart();
-    }
-    
-    console.log('✅ Sistema inicializado com sucesso!');
-    if (window.logTela) window.logTela('✅ Sistema inicializado!', '#0f0');
-    
-  } catch (error) {
-    console.error(' Erro na inicialização:', error);
-    if (window.logTela) window.logTela('❌ ERRO init: ' + error.message, '#f00');
-    alert('Erro ao carregar o sistema. Recarregue a página.');
   }
 });
+
 // ============================================
 // REPOSIÇÃO DE ESTOQUE - COM BUSCA POR NOME
 // ============================================
