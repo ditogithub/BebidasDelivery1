@@ -11721,7 +11721,6 @@ document.getElementById('btnUseLocation')?.addEventListener('click', () => {
 
 
 //-----------------------------------------------------------------------------------------------
-
 // ========CORRIGIDO===========
 // INICIALIZAÇÃO OTIMIZADA COM LISTENER DE TEMPO REAL
 // =========================
@@ -11732,7 +11731,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log(' Sistema inicializando (versão otimizada)...');
     
     // ============================================
-    // 🔥 CAPTURAR RESULTADO DO REDIRECT (MOBILE) - ADICIONADO
+    // 🔥 CAPTURAR RESULTADO DO REDIRECT (MOBILE)
     // ============================================
     try {
       console.log('🔍 Verificando resultado do redirect...');
@@ -11784,6 +11783,101 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('❌ Erro no redirect result:', e);
       if (window.logTela) window.logTela('❌ ERRO redirect result: ' + (e.code || e.message), '#f00');
     }
+    // ============================================
+    // FIM DA ADIÇÃO DO REDIRECT RESULT
+    // ============================================
+    
+    // PASSO 4: Inicializar exibição do usuário (antes de tudo)
+    atualizarExibicaoUsuario();
+    
+    // ============================================
+    // 🔥 AUTENTICAR ANÔNIMO - SÓ SE NÃO TIVER USUÁRIO
+    // ============================================
+    if (!auth.currentUser) {
+      console.log('👤 Nenhum usuário - criando anônimo...');
+      if (window.logTela) window.logTela('👤 Criando anônimo...', '#ff0');
+      
+      await auth.signInAnonymously().catch(() => {
+        console.log('⚠️ Anônimo em segundo plano');
+      });
+    } else {
+      console.log('✅ Usuário já logado:', auth.currentUser.email || 'ANÔNIMO');
+      if (window.logTela) window.logTela('✅ Usuário: ' + (auth.currentUser.email || 'ANÔNIMO'), '#0f0');
+    }
+
+    // 2. CARREGAR TAXA DE ENTREGA PRIMEIRO
+    await carregarTaxaEntrega();
+
+    // 2.5 CARREGAR TAXAS POR BAIRRO
+    await carregarTaxasPorBairro();
+
+    // 3. DEPOIS carregar PIX (que depende da taxa)
+    await inicializarPix();
+    
+    // 2. Carregar carrinho do localStorage APÓS autenticação
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
+        cart = JSON.parse(savedCart);
+        console.log('🛒 Carrinho carregado do localStorage:', cart.length, 'itens');
+      } catch (e) {
+        console.error('❌ Erro ao carregar carrinho:', e);
+        cart = [];
+      }
+    }
+   //------------ 
+    // 3. Adicionar real-time listener para produtos (ATUALIZAÇÃO EM TEMPO REAL)
+    db.collection('produtos').onSnapshot((snapshot) => {
+      console.log(' Atualização em tempo real de produtos detectada');
+      
+      // Invalidar cache quando houver mudanças
+      produtosCache = null;
+      ultimoCarregamentoCache = null;
+      
+      // Recarregar produtos se o catálogo estiver visível
+      if (typeof carregarProdutos === 'function' && 
+          document.getElementById('catalogCard').style.display !== 'none') {
+        setTimeout(() => {
+          carregarProdutos();
+        }, 500);
+      }
+    });
+    
+    // 4. Configurar listener do status do carrinho
+    db.collection("config").doc("cart").onSnapshot(() => {
+      atualizarStatusCarrinhoUnificado();
+    });
+    
+    // 5. Carregar status inicial do carrinho
+    await atualizarStatusCarrinhoUnificado();
+    
+    // 6. Atualizar contador do carrinho IMEDIATAMENTE
+    updateCartCount();
+    
+    // 7. Carregar produtos (usando versão otimizada)
+    await carregarProdutosOtimizado();
+    
+    // 8. Adicionar evento de pesquisa
+    document.getElementById('searchInput').addEventListener('input', () => {
+      carregarProdutos();
+    });
+    
+    // 9. Atualizar carrinho visual se houver itens
+    if (cart.length > 0) {
+      console.log(' Renderizando carrinho com', cart.length, 'itens...');
+      renderCart();
+    }
+    
+    console.log('✅ Sistema inicializado com sucesso!');
+    if (window.logTela) window.logTela('✅ Sistema inicializado!', '#0f0');
+    
+  } catch (error) {
+    console.error(' Erro na inicialização:', error);
+    if (window.logTela) window.logTela('❌ ERRO init: ' + error.message, '#f00');
+    alert('Erro ao carregar o sistema. Recarregue a página.');
+  }
+});
+//----------------------------------------------------------------------------------------------------
     // ============================================
     // FIM DA ADIÇÃO DO REDIRECT RESULT
     // ============================================
@@ -15247,53 +15341,54 @@ async function saveUserToFirestore(user) {
 }
 
 // ============================================
-// LOGOUT - VERSÃO COMPLETA
+// 🔥 LOGOUT INTELIGENTE - NÃO ACUMULA ANÔNIMOS
 // ============================================
 
 window.logoutAdmin = async function() {
     try {
-        console.log('🔒 Realizando logout...');
+        console.log('🔒 Realizando logout inteligente...');
         
-        // DESCONECTAR DO FIREBASE
-        await auth.signOut();
-        console.log('✅ Usuário desconectado do Firebase');
+        // 1. Verificar se o usuário atual é anônimo ou real
+        var userAtual = auth.currentUser;
+        var eraAnonimo = userAtual ? userAtual.isAnonymous : false;
         
-        // LIMPAR VARIÁVEIS
+        console.log('👤 Usuário era:', eraAnonimo ? 'ANÔNIMO' : 'REAL');
+        
+        // 2. Se era REAL, desconectar
+        if (!eraAnonimo && userAtual) {
+            console.log('🔄 Desconectando usuário REAL...');
+            await auth.signOut();
+            console.log('✅ Desconectado');
+        }
+        
+        // 3. Limpar dados locais
         window.currentUser = null;
         window.adminAutenticado = false;
         
-        // RESETAR FLAG DE BOAS-VINDAS
-        resetBoasVindas();
-        console.log('🔄 Flag de boas-vindas resetada');
-        
-        // LIMPAR LOCALSTORAGE
+        // 4. Limpar localStorage (manter carrinho)
         var chavesParaLimpar = [
             'delivery_bebidas_user',
             'bebidas_user',
             'user',
             'currentUser',
             'usuario_sessao',
-            'construcao_user'
+            'construcao_user',
+            'userData'
         ];
+        
         chavesParaLimpar.forEach(function(chave) {
             localStorage.removeItem(chave);
         });
         
-        // LIMPAR SESSIONSTORAGE
+        // 5. Limpar sessionStorage
         sessionStorage.clear();
         
-        // FECHAR TODOS OS MODAIS
+        // 6. Fechar modais
         document.querySelectorAll('.modal-backdrop, .modal, .login-modal').forEach(function(el) {
             el.remove();
         });
         
-        // REMOVER ÁREA DO USUÁRIO
-        var userArea = document.querySelector('.user-info-area');
-        if (userArea) {
-            userArea.remove();
-        }
-        
-        // ATUALIZAR BOTÃO DE LOGIN
+        // 7. Atualizar UI
         var btnUserLogin = document.getElementById('btnUserLogin');
         if (btnUserLogin) {
             btnUserLogin.innerHTML = `
@@ -15302,15 +15397,34 @@ window.logoutAdmin = async function() {
             `;
         }
         
-        console.log('✅ Logout realizado com sucesso!');
+        var userArea = document.querySelector('.user-info-area');
+        if (userArea) {
+            userArea.remove();
+        }
+        
+        // 8. 🔥 CRUCIAL: Recriar um anônimo LIMPO
+        console.log('🔄 Recriando anônimo limpo...');
+        try {
+            await auth.signInAnonymously();
+            console.log('✅ Novo anônimo criado');
+        } catch (e) {
+            console.log('⚠️ Erro ao criar anônimo:', e.message);
+        }
+        
+        console.log('✅ Logout inteligente completo!');
         alert('✅ Você saiu da conta!');
         
-        // RECARREGAR A PÁGINA
-        location.reload();
+        // 9. NÃO recarregar a página (evita acúmulo)
+        // Em vez disso, só atualizar a UI
+        if (typeof carregarProdutos === 'function') {
+            carregarProdutos();
+        }
         
     } catch (error) {
         console.error('❌ Erro no logout:', error);
-        alert('❌ Erro ao fazer logout: ' + error.message);
+        alert('❌ Erro ao sair: ' + error.message);
+        // Fallback: recarregar
+        location.reload();
     }
 };
 
